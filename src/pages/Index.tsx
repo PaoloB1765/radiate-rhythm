@@ -37,7 +37,7 @@ const Index = () => {
             className="w-24 h-24 md:w-32 md:h-32 object-contain animate-float"
           />
           <div className="text-center">
-            <h1 className="font-display text-2xl md:text-3xl text-foreground tracking-wide">
+            <h1 className="font-['Arial'] text-2xl md:text-3xl text-foreground tracking-wide">
               VIVA RADIOSTAR
             </h1>
             <p className="text-muted-foreground text-sm flex items-center justify-center gap-2 mt-1">
