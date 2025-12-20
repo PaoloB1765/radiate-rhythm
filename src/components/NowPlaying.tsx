@@ -22,7 +22,7 @@ const NowPlaying = ({ artist, title, isPlaying }: NowPlayingProps) => {
       
       {title ? (
         <div className="space-y-1">
-          <h2 className="font-display text-xl md:text-2xl text-foreground truncate">
+          <h2 className="font-['Arial'] text-xl md:text-2xl text-foreground truncate">
             {title}
           </h2>
           <p className="text-muted-foreground text-base md:text-lg truncate">
