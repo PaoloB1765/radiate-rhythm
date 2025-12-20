@@ -42,7 +42,7 @@ const Index = () => {
             </h1>
             <p className="text-muted-foreground text-sm flex items-center justify-center gap-2 mt-1">
               <Radio className="w-4 h-4" />
-              <span>'70-'80 Hits</span>
+              <span>La radio che ti porta negli anni d'oro della Musica</span>
             </p>
           </div>
         </header>
