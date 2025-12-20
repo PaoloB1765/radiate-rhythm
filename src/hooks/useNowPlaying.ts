@@ -1,9 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 interface NowPlayingData {
   artist: string;
   title: string;
   coverArt: string;
+  duration: number;
+  elapsed: number;
+  playedAt: number;
 }
 
 const NOW_PLAYING_URL = "https://vrs-blackbox.ddns.net/api/nowplaying/vrs";
@@ -13,7 +16,14 @@ export const useNowPlaying = (isPlaying: boolean) => {
     artist: "",
     title: "",
     coverArt: "",
+    duration: 0,
+    elapsed: 0,
+    playedAt: 0,
   });
+  
+  const [currentElapsed, setCurrentElapsed] = useState(0);
+  const playedAtRef = useRef(0);
+  const durationRef = useRef(0);
 
   const fetchNowPlaying = useCallback(async () => {
     try {
@@ -24,18 +34,43 @@ export const useNowPlaying = (isPlaying: boolean) => {
       
       // AzuraCast API structure
       const nowPlayingTrack = data.now_playing?.song;
+      const elapsed = data.now_playing?.elapsed || 0;
+      const duration = data.now_playing?.duration || 0;
+      const playedAt = data.now_playing?.played_at || 0;
+      
+      playedAtRef.current = playedAt;
+      durationRef.current = duration;
       
       if (nowPlayingTrack) {
         setNowPlaying({
           artist: nowPlayingTrack.artist || "",
           title: nowPlayingTrack.title || "",
           coverArt: nowPlayingTrack.art || data.now_playing?.song?.art || "",
+          duration,
+          elapsed,
+          playedAt,
         });
+        setCurrentElapsed(elapsed);
       }
     } catch (error) {
       console.error("Error fetching now playing:", error);
     }
   }, []);
+
+  // Update elapsed time every second
+  useEffect(() => {
+    if (!isPlaying || durationRef.current === 0) return;
+    
+    const interval = setInterval(() => {
+      const now = Math.floor(Date.now() / 1000);
+      const newElapsed = now - playedAtRef.current;
+      if (newElapsed <= durationRef.current) {
+        setCurrentElapsed(newElapsed);
+      }
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [isPlaying, nowPlaying.playedAt]);
 
   useEffect(() => {
     // Fetch immediately
@@ -51,5 +86,5 @@ export const useNowPlaying = (isPlaying: boolean) => {
     return () => clearInterval(interval);
   }, [isPlaying, fetchNowPlaying]);
 
-  return nowPlaying;
+  return { ...nowPlaying, elapsed: currentElapsed };
 };

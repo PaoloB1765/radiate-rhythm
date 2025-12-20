@@ -51,6 +51,8 @@ const Index = () => {
         <VinylDisc 
           isPlaying={isPlaying} 
           coverArt={nowPlaying.coverArt}
+          duration={nowPlaying.duration}
+          elapsed={nowPlaying.elapsed}
         />
 
         {/* Play button */}
