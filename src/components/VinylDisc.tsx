@@ -4,11 +4,21 @@ interface VinylDiscProps {
   isPlaying: boolean;
   coverArt?: string;
   className?: string;
+  duration?: number;
+  elapsed?: number;
 }
 
-const VinylDisc = ({ isPlaying, coverArt, className }: VinylDiscProps) => {
+const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }: VinylDiscProps) => {
+  const progress = duration > 0 ? (elapsed / duration) * 100 : 0;
+  
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("relative flex flex-col items-center gap-4", className)}>
       {/* Outer glow */}
       <div className="absolute inset-0 rounded-full bg-primary/20 blur-3xl animate-pulse-glow" />
       
@@ -90,6 +100,22 @@ const VinylDisc = ({ isPlaying, coverArt, className }: VinylDiscProps) => {
         {/* Center hole */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-background" />
       </div>
+
+      {/* Progress bar */}
+      {duration > 0 && (
+        <div className="w-full max-w-[320px] px-4">
+          <div className="relative h-1.5 bg-muted rounded-full overflow-hidden">
+            <div 
+              className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-1000 ease-linear"
+              style={{ width: `${Math.min(progress, 100)}%` }}
+            />
+          </div>
+          <div className="flex justify-between mt-1.5 text-xs text-muted-foreground font-['Arial']">
+            <span>{formatTime(elapsed)}</span>
+            <span>{formatTime(duration)}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
