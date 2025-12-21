@@ -3,12 +3,13 @@ import VinylDisc from "@/components/VinylDisc";
 import PlayButton from "@/components/PlayButton";
 import VolumeControl from "@/components/VolumeControl";
 import NowPlaying from "@/components/NowPlaying";
+import VUMeter from "@/components/VUMeter";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useNowPlaying } from "@/hooks/useNowPlaying";
 import { Radio } from "lucide-react";
 
 const Index = () => {
-  const { isPlaying, isLoading, volume, isMuted, togglePlay, setVolume, toggleMute } = useAudioPlayer();
+  const { isPlaying, isLoading, volume, isMuted, analyser, togglePlay, setVolume, toggleMute } = useAudioPlayer();
   const nowPlaying = useNowPlaying(isPlaying);
 
   return (
@@ -68,6 +69,12 @@ const Index = () => {
         <NowPlaying 
           artist={nowPlaying.artist}
           title={nowPlaying.title}
+          isPlaying={isPlaying}
+        />
+
+        {/* VU Meters */}
+        <VUMeter 
+          analyser={analyser}
           isPlaying={isPlaying}
         />
 

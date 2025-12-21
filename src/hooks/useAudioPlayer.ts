@@ -7,6 +7,7 @@ interface UseAudioPlayerReturn {
   isLoading: boolean;
   volume: number;
   isMuted: boolean;
+  analyser: AnalyserNode | null;
   togglePlay: () => void;
   setVolume: (value: number) => void;
   toggleMute: () => void;
@@ -14,15 +15,20 @@ interface UseAudioPlayerReturn {
 
 export const useAudioPlayer = (): UseAudioPlayerReturn => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [volume, setVolumeState] = useState(0.7);
   const [isMuted, setIsMuted] = useState(false);
+  const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
   const previousVolume = useRef(0.7);
 
   useEffect(() => {
     const audio = new Audio();
     audio.preload = "none";
+    audio.crossOrigin = "anonymous";
     audioRef.current = audio;
 
     const handleCanPlay = () => {
@@ -62,6 +68,9 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       audio.removeEventListener("error", handleError);
       audio.pause();
       audio.src = "";
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
     };
   }, []);
 
@@ -70,6 +79,40 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       audioRef.current.volume = isMuted ? 0 : volume;
     }
   }, [volume, isMuted]);
+
+  const setupAudioAnalyser = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    // Create AudioContext only if not already created
+    if (!audioContextRef.current) {
+      audioContextRef.current = new AudioContext();
+    }
+
+    const ctx = audioContextRef.current;
+
+    // Create source only if not already created
+    if (!sourceRef.current) {
+      sourceRef.current = ctx.createMediaElementSource(audio);
+    }
+
+    // Create analyser
+    if (!analyserRef.current) {
+      analyserRef.current = ctx.createAnalyser();
+      analyserRef.current.fftSize = 256;
+      analyserRef.current.smoothingTimeConstant = 0.8;
+      
+      sourceRef.current.connect(analyserRef.current);
+      analyserRef.current.connect(ctx.destination);
+      
+      setAnalyser(analyserRef.current);
+    }
+
+    // Resume context if suspended
+    if (ctx.state === "suspended") {
+      ctx.resume();
+    }
+  }, []);
 
   const togglePlay = useCallback(() => {
     const audio = audioRef.current;
@@ -82,12 +125,16 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       setIsLoading(true);
       audio.src = STREAM_URL;
       audio.load();
+      
+      // Setup audio analyser before playing
+      setupAudioAnalyser();
+      
       audio.play().catch((error) => {
         console.error("Playback failed:", error);
         setIsLoading(false);
       });
     }
-  }, [isPlaying]);
+  }, [isPlaying, setupAudioAnalyser]);
 
   const setVolume = useCallback((value: number) => {
     setVolumeState(value);
@@ -106,6 +153,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     isLoading,
     volume,
     isMuted,
+    analyser,
     togglePlay,
     setVolume,
     toggleMute,
