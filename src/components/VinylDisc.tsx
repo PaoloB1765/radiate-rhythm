@@ -18,7 +18,7 @@ const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }
   };
 
   return (
-    <div className={cn("relative flex flex-col items-center gap-4", className)}>
+    <div className={cn("relative", className)}>
       {/* Outer glow */}
       <div className="absolute inset-0 rounded-full bg-primary/20 blur-3xl animate-pulse-glow" />
       
@@ -101,9 +101,9 @@ const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-background" />
       </div>
 
-      {/* Progress bar */}
+      {/* Progress bar - positioned below */}
       {duration > 0 && (
-        <div className="w-full max-w-[320px] px-4">
+        <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[320px] px-4">
           <div className="relative h-1.5 bg-muted rounded-full overflow-hidden">
             <div 
               className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-1000 ease-linear"
