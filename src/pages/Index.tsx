@@ -56,11 +56,13 @@ const Index = () => {
         />
 
         {/* Play button */}
-        <PlayButton 
-          isPlaying={isPlaying} 
-          isLoading={isLoading} 
-          onClick={togglePlay}
-        />
+        <div className="mt-4">
+          <PlayButton 
+            isPlaying={isPlaying} 
+            isLoading={isLoading} 
+            onClick={togglePlay}
+          />
+        </div>
 
         {/* Now playing info */}
         <NowPlaying 
