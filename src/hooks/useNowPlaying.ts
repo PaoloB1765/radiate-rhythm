@@ -76,12 +76,12 @@ export const useNowPlaying = (isPlaying: boolean) => {
     // Fetch immediately
     fetchNowPlaying();
 
-    // Poll every 10 seconds when playing
+    // Poll every 180 seconds when playing
     const interval = setInterval(() => {
       if (isPlaying) {
         fetchNowPlaying();
       }
-    }, 10000);
+    }, 180000);
 
     return () => clearInterval(interval);
   }, [isPlaying, fetchNowPlaying]);
