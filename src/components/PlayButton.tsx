@@ -13,7 +13,7 @@ const PlayButton = ({ isPlaying, isLoading, onClick }: PlayButtonProps) => {
       onClick={onClick}
       disabled={isLoading}
       className={cn(
-        "relative w-20 h-20 md:w-24 md:h-24 rounded-full",
+        "relative w-16 h-16 md:w-20 md:h-20 rounded-full",
         "bg-gradient-to-br from-primary to-primary/80",
         "flex items-center justify-center",
         "transition-all duration-300 ease-out",
@@ -27,11 +27,11 @@ const PlayButton = ({ isPlaying, isLoading, onClick }: PlayButtonProps) => {
       <div className="absolute inset-1 rounded-full bg-gradient-to-br from-primary-foreground/20 to-transparent" />
       
       {isLoading ? (
-        <Loader2 className="w-8 h-8 md:w-10 md:h-10 text-primary-foreground animate-spin" />
+        <Loader2 className="w-6 h-6 md:w-8 md:h-8 text-primary-foreground animate-spin" />
       ) : isPlaying ? (
-        <Pause className="w-8 h-8 md:w-10 md:h-10 text-primary-foreground relative z-10" />
+        <Pause className="w-6 h-6 md:w-8 md:h-8 text-primary-foreground relative z-10" />
       ) : (
-        <Play className="w-8 h-8 md:w-10 md:h-10 text-primary-foreground relative z-10 ml-1" />
+        <Play className="w-6 h-6 md:w-8 md:h-8 text-primary-foreground relative z-10 ml-1" />
       )}
     </button>
   );
