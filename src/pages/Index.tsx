@@ -32,11 +32,17 @@ const Index = () => {
       <main className="flex flex-col items-center gap-8 md:gap-10 w-full max-w-lg">
         {/* Logo and header */}
         <header className="flex flex-col items-center gap-4">
-          <img 
-            src={vrsLogo} 
-            alt="Viva RadioStar Logo" 
-            className="w-32 h-32 md:w-44 md:h-44 object-contain animate-float"
-          />
+          <a 
+            href="https://www.vivaradiostar.it" 
+            target="_blank" 
+            rel="noopener noreferrer"
+          >
+            <img 
+              src={vrsLogo} 
+              alt="Viva RadioStar Logo" 
+              className="w-32 h-32 md:w-44 md:h-44 object-contain animate-float hover:scale-105 transition-transform"
+            />
+          </a>
           <p className="text-muted-foreground text-sm flex items-center justify-center gap-2">
             <Radio className="w-4 h-4" />
             <span>La radio che ti porta negli anni d'oro della Musica</span>
@@ -83,21 +89,7 @@ const Index = () => {
       </main>
 
       {/* Footer */}
-      <footer className="absolute bottom-4 text-center flex flex-col items-center gap-2">
-        <div className="flex items-center gap-4">
-          <a 
-            href="https://www.vivaradiostar.it" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-muted-foreground/70 hover:text-primary transition-colors"
-            aria-label="Sito web"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-            </svg>
-          </a>
-        </div>
+      <footer className="absolute bottom-4 text-center">
         <p className="text-xs text-muted-foreground/50">
           Streaming live • Powered by VRS
         </p>
