@@ -104,7 +104,7 @@ const VUMeter = ({ analyser, isPlaying }: VUMeterProps) => {
           })}
         </div>
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold w-6 text-right">
-          +6
+          +12
         </span>
       </div>
     </div>

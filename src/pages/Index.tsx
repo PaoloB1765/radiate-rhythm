@@ -35,17 +35,12 @@ const Index = () => {
           <img 
             src={vrsLogo} 
             alt="Viva RadioStar Logo" 
-            className="w-24 h-24 md:w-32 md:h-32 object-contain animate-float"
+            className="w-32 h-32 md:w-44 md:h-44 object-contain animate-float"
           />
-          <div className="text-center">
-            <h1 className="font-['Arial'] text-2xl md:text-3xl text-foreground tracking-wide">
-              VIVA RADIOSTAR
-            </h1>
-            <p className="text-muted-foreground text-sm flex items-center justify-center gap-2 mt-1">
-              <Radio className="w-4 h-4" />
-              <span>La radio che ti porta negli anni d'oro della Musica</span>
-            </p>
-          </div>
+          <p className="text-muted-foreground text-sm flex items-center justify-center gap-2">
+            <Radio className="w-4 h-4" />
+            <span>La radio che ti porta negli anni d'oro della Musica</span>
+          </p>
         </header>
 
         {/* Vinyl disc visualization */}
