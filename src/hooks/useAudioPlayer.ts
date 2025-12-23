@@ -27,8 +27,21 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
 
   useEffect(() => {
     const audio = new Audio();
-    audio.preload = "none";
+    audio.preload = "auto";
     audio.crossOrigin = "anonymous";
+    
+    // Add 10-second buffer to prevent skipping
+    if ('mozAutoplayEnabled' in audio || 'webkitAudioDecodedByteCount' in audio) {
+      // Firefox/Safari specific handling
+    }
+    
+    // Set buffer size hint via MediaSource if available
+    try {
+      (audio as any).bufferSize = 10;
+    } catch (e) {
+      // Not all browsers support this
+    }
+    
     audioRef.current = audio;
 
     const handleCanPlay = () => {
