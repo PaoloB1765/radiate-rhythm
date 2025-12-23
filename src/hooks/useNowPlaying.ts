@@ -8,6 +8,7 @@ interface NowPlayingData {
   elapsed: number;
   playedAt: number;
   nextArtist: string;
+  nextCoverArt: string;
   nextTitle: string;
 }
 
@@ -23,6 +24,7 @@ export const useNowPlaying = (isPlaying: boolean) => {
     playedAt: 0,
     nextArtist: "",
     nextTitle: "",
+    nextCoverArt: "",
   });
   
   const [currentElapsed, setCurrentElapsed] = useState(0);
@@ -58,6 +60,7 @@ export const useNowPlaying = (isPlaying: boolean) => {
           playedAt,
           nextArtist: nextSong?.artist || "",
           nextTitle: nextSong?.title || "",
+          nextCoverArt: nextSong?.art || "",
         });
         setCurrentElapsed(elapsed);
       }

@@ -7,9 +7,10 @@ interface NowPlayingProps {
   isPlaying: boolean;
   nextArtist?: string;
   nextTitle?: string;
+  nextCoverArt?: string;
 }
 
-const NowPlaying = ({ artist, title, isPlaying, nextArtist, nextTitle }: NowPlayingProps) => {
+const NowPlaying = ({ artist, title, isPlaying, nextArtist, nextTitle, nextCoverArt }: NowPlayingProps) => {
   return (
     <div className="glass-card p-4 md:p-6 w-full max-w-md">
       <div className="flex items-center gap-3 mb-3">
@@ -44,9 +45,18 @@ const NowPlaying = ({ artist, title, isPlaying, nextArtist, nextTitle }: NowPlay
           <span className="text-xs uppercase tracking-widest text-muted-foreground/70 font-semibold">
             Next Song:
           </span>
-          <p className="text-sm text-foreground/80 truncate mt-1">
-            {nextTitle} {nextArtist && <span className="text-muted-foreground">- {nextArtist}</span>}
-          </p>
+          <div className="flex items-center gap-3 mt-2">
+            {nextCoverArt && (
+              <img 
+                src={nextCoverArt} 
+                alt="Next song cover" 
+                className="w-10 h-10 rounded object-cover flex-shrink-0"
+              />
+            )}
+            <p className="text-sm text-foreground/80 truncate">
+              {nextTitle} {nextArtist && <span className="text-muted-foreground">- {nextArtist}</span>}
+            </p>
+          </div>
         </div>
       )}
     </div>

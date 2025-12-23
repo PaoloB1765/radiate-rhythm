@@ -73,6 +73,7 @@ const Index = () => {
           isPlaying={isPlaying}
           nextArtist={nowPlaying.nextArtist}
           nextTitle={nowPlaying.nextTitle}
+          nextCoverArt={nowPlaying.nextCoverArt}
         />
 
         {/* Volume control */}
