@@ -35,8 +35,8 @@ const VUMeter = ({ analyser, isPlaying }: VUMeterProps) => {
       }
 
       const avg = sum / bufferLength / 255;
-      // Balanced scaling: 80% volume should reach yellow/red zone
-      const scaled = Math.min(1, avg * 2.8);
+      // Lower scaling: 75% volume should stay in yellow zone
+      const scaled = Math.min(1, avg * 1.8);
 
       setLevel(scaled);
 
