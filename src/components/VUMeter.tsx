@@ -6,8 +6,8 @@ interface VUMeterProps {
   isPlaying: boolean;
 }
 
-const LED_COUNT = 16;
-const DECAY_RATE = 0.92;
+const LED_COUNT = 20;
+const DECAY_RATE = 0.88;
 
 const VUMeter = ({ analyser, isPlaying }: VUMeterProps) => {
   const [level, setLevel] = useState(0);
@@ -35,7 +35,8 @@ const VUMeter = ({ analyser, isPlaying }: VUMeterProps) => {
       }
 
       const avg = sum / bufferLength / 255;
-      const scaled = Math.min(1, avg * 2.5);
+      // Higher scaling factor for more dynamic movement across green/yellow/red
+      const scaled = Math.min(1, avg * 4.5);
 
       setLevel(scaled);
 
@@ -66,15 +67,16 @@ const VUMeter = ({ analyser, isPlaying }: VUMeterProps) => {
   const getLEDColor = (index: number, isActive: boolean, isPeak: boolean) => {
     if (!isActive && !isPeak) return "bg-muted/30";
     
-    const threshold1 = Math.floor(LED_COUNT * 0.6);
-    const threshold2 = Math.floor(LED_COUNT * 0.85);
+    // Adjusted thresholds for more balanced distribution: 50% green, 30% yellow, 20% red
+    const threshold1 = Math.floor(LED_COUNT * 0.5);
+    const threshold2 = Math.floor(LED_COUNT * 0.8);
     
     if (index < threshold1) {
-      return isPeak ? "bg-green-400 shadow-green-400/50 shadow-sm" : "bg-green-500";
+      return isPeak ? "bg-green-400 shadow-green-400/50 shadow-md" : "bg-green-500";
     } else if (index < threshold2) {
-      return isPeak ? "bg-yellow-400 shadow-yellow-400/50 shadow-sm" : "bg-yellow-500";
+      return isPeak ? "bg-yellow-400 shadow-yellow-400/50 shadow-md" : "bg-yellow-500";
     } else {
-      return isPeak ? "bg-red-400 shadow-red-400/50 shadow-sm" : "bg-red-500";
+      return isPeak ? "bg-red-400 shadow-red-400/50 shadow-md" : "bg-red-500";
     }
   };
 
