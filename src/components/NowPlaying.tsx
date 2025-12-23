@@ -5,9 +5,11 @@ interface NowPlayingProps {
   artist: string;
   title: string;
   isPlaying: boolean;
+  nextArtist?: string;
+  nextTitle?: string;
 }
 
-const NowPlaying = ({ artist, title, isPlaying }: NowPlayingProps) => {
+const NowPlaying = ({ artist, title, isPlaying, nextArtist, nextTitle }: NowPlayingProps) => {
   return (
     <div className="glass-card p-4 md:p-6 w-full max-w-md">
       <div className="flex items-center gap-3 mb-3">
@@ -33,6 +35,18 @@ const NowPlaying = ({ artist, title, isPlaying }: NowPlayingProps) => {
         <div className="flex items-center gap-3 text-muted-foreground">
           <Music2 className="w-5 h-5" />
           <span className="text-base">Waiting for stream info...</span>
+        </div>
+      )}
+      
+      {/* Next Song */}
+      {nextTitle && (
+        <div className="mt-4 pt-3 border-t border-border/30">
+          <span className="text-xs uppercase tracking-widest text-muted-foreground/70 font-semibold">
+            Next Song:
+          </span>
+          <p className="text-sm text-foreground/80 truncate mt-1">
+            {nextTitle} {nextArtist && <span className="text-muted-foreground">- {nextArtist}</span>}
+          </p>
         </div>
       )}
     </div>

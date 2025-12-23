@@ -7,6 +7,8 @@ interface NowPlayingData {
   duration: number;
   elapsed: number;
   playedAt: number;
+  nextArtist: string;
+  nextTitle: string;
 }
 
 const NOW_PLAYING_URL = "https://vrs-blackbox.ddns.net/api/nowplaying/vrs";
@@ -19,6 +21,8 @@ export const useNowPlaying = (isPlaying: boolean) => {
     duration: 0,
     elapsed: 0,
     playedAt: 0,
+    nextArtist: "",
+    nextTitle: "",
   });
   
   const [currentElapsed, setCurrentElapsed] = useState(0);
@@ -41,6 +45,9 @@ export const useNowPlaying = (isPlaying: boolean) => {
       playedAtRef.current = playedAt;
       durationRef.current = duration;
       
+      // Next song info from AzuraCast API
+      const nextSong = data.playing_next?.song;
+      
       if (nowPlayingTrack) {
         setNowPlaying({
           artist: nowPlayingTrack.artist || "",
@@ -49,6 +56,8 @@ export const useNowPlaying = (isPlaying: boolean) => {
           duration,
           elapsed,
           playedAt,
+          nextArtist: nextSong?.artist || "",
+          nextTitle: nextSong?.title || "",
         });
         setCurrentElapsed(elapsed);
       }
