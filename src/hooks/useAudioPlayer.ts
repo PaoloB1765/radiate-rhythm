@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 
 const STREAM_URL = "https://vrs-blackbox.ddns.net/listen/vrs/radio.mp3";
-const BUFFER_SECONDS = 60;
 
 interface UseAudioPlayerReturn {
   isPlaying: boolean;
@@ -25,58 +24,15 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
   const [isMuted, setIsMuted] = useState(false);
   const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
   const previousVolume = useRef(0.7);
-  const bufferCheckInterval = useRef<NodeJS.Timeout | null>(null);
-
-  const checkBufferAndPlay = useCallback((audio: HTMLAudioElement) => {
-    // Clear any existing interval
-    if (bufferCheckInterval.current) {
-      clearInterval(bufferCheckInterval.current);
-    }
-
-    bufferCheckInterval.current = setInterval(() => {
-      if (audio.buffered.length > 0) {
-        const bufferedEnd = audio.buffered.end(audio.buffered.length - 1);
-        const currentTime = audio.currentTime;
-        const bufferedSeconds = bufferedEnd - currentTime;
-
-        console.log(`Buffered: ${bufferedSeconds.toFixed(1)}s / ${BUFFER_SECONDS}s`);
-
-        if (bufferedSeconds >= BUFFER_SECONDS) {
-          clearInterval(bufferCheckInterval.current!);
-          bufferCheckInterval.current = null;
-          audio.play().catch((error) => {
-            console.error("Playback failed:", error);
-            setIsLoading(false);
-          });
-        }
-      }
-    }, 500);
-
-    // Fallback: start playing after 10 seconds even if buffer isn't full
-    // (for live streams that may not buffer as expected)
-    setTimeout(() => {
-      if (bufferCheckInterval.current) {
-        clearInterval(bufferCheckInterval.current);
-        bufferCheckInterval.current = null;
-        if (audio.paused && audio.src) {
-          console.log("Buffer timeout - starting playback");
-          audio.play().catch((error) => {
-            console.error("Playback failed:", error);
-            setIsLoading(false);
-          });
-        }
-      }
-    }, 10000);
-  }, []);
 
   useEffect(() => {
     const audio = new Audio();
-    audio.preload = "auto";
+    audio.preload = "none";
     audio.crossOrigin = "anonymous";
     audioRef.current = audio;
 
     const handleCanPlay = () => {
-      // Don't set loading to false yet - wait for buffer
+      setIsLoading(false);
     };
 
     const handleWaiting = () => {
@@ -98,16 +54,11 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       setIsPlaying(false);
     };
 
-    const handleStalled = () => {
-      console.log("Audio stalled - attempting to recover");
-    };
-
     audio.addEventListener("canplay", handleCanPlay);
     audio.addEventListener("waiting", handleWaiting);
     audio.addEventListener("playing", handlePlaying);
     audio.addEventListener("pause", handlePause);
     audio.addEventListener("error", handleError);
-    audio.addEventListener("stalled", handleStalled);
 
     return () => {
       audio.removeEventListener("canplay", handleCanPlay);
@@ -115,12 +66,8 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       audio.removeEventListener("playing", handlePlaying);
       audio.removeEventListener("pause", handlePause);
       audio.removeEventListener("error", handleError);
-      audio.removeEventListener("stalled", handleStalled);
       audio.pause();
       audio.src = "";
-      if (bufferCheckInterval.current) {
-        clearInterval(bufferCheckInterval.current);
-      }
       if (audioContextRef.current) {
         audioContextRef.current.close();
       }
@@ -174,10 +121,6 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     if (isPlaying) {
       audio.pause();
       audio.src = "";
-      if (bufferCheckInterval.current) {
-        clearInterval(bufferCheckInterval.current);
-        bufferCheckInterval.current = null;
-      }
     } else {
       setIsLoading(true);
       audio.src = STREAM_URL;
@@ -186,10 +129,12 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       // Setup audio analyser before playing
       setupAudioAnalyser();
       
-      // Start buffer check - will play when 60s buffered or after timeout
-      checkBufferAndPlay(audio);
+      audio.play().catch((error) => {
+        console.error("Playback failed:", error);
+        setIsLoading(false);
+      });
     }
-  }, [isPlaying, setupAudioAnalyser, checkBufferAndPlay]);
+  }, [isPlaying, setupAudioAnalyser]);
 
   const setVolume = useCallback((value: number) => {
     setVolumeState(value);
