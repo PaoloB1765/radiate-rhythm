@@ -53,9 +53,10 @@ const NowPlaying = ({ artist, title, isPlaying, nextArtist, nextTitle, nextCover
                 className="w-10 h-10 rounded object-cover flex-shrink-0"
               />
             )}
-            <p className="text-sm text-foreground/80 truncate">
-              {nextTitle} {nextArtist && <span className="text-muted-foreground">- {nextArtist}</span>}
-            </p>
+            <div className="min-w-0">
+              <p className="text-sm text-foreground/80 truncate">{nextTitle}</p>
+              {nextArtist && <p className="text-xs text-muted-foreground truncate">{nextArtist}</p>}
+            </div>
           </div>
         </div>
       )}
