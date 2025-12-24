@@ -58,13 +58,11 @@ const Index = () => {
         />
 
         {/* Play button */}
-        <div className="mt-4">
-          <PlayButton 
-            isPlaying={isPlaying} 
-            isLoading={isLoading} 
-            onClick={togglePlay}
-          />
-        </div>
+        <PlayButton 
+          isPlaying={isPlaying} 
+          isLoading={isLoading} 
+          onClick={togglePlay}
+        />
 
         {/* VU Meter */}
         <VUMeter 
