@@ -83,12 +83,14 @@ const Index = () => {
         />
 
         {/* Volume control */}
-        <VolumeControl
-          volume={volume}
-          onVolumeChange={setVolume}
-          onMuteToggle={toggleMute}
-          isMuted={isMuted}
-        />
+        <div className="mb-6">
+          <VolumeControl
+            volume={volume}
+            onVolumeChange={setVolume}
+            onMuteToggle={toggleMute}
+            isMuted={isMuted}
+          />
+        </div>
       </main>
 
       {/* Footer */}
