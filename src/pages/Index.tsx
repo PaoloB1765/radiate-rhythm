@@ -66,6 +66,12 @@ const Index = () => {
           />
         </div>
 
+        {/* VU Meter */}
+        <VUMeter 
+          analyser={analyser}
+          isPlaying={isPlaying}
+        />
+
         {/* Now playing info */}
         <NowPlaying 
           artist={nowPlaying.artist}
@@ -82,12 +88,6 @@ const Index = () => {
           onVolumeChange={setVolume}
           onMuteToggle={toggleMute}
           isMuted={isMuted}
-        />
-
-        {/* VU Meter */}
-        <VUMeter 
-          analyser={analyser}
-          isPlaying={isPlaying}
         />
       </main>
 
