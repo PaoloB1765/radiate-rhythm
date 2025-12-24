@@ -1,4 +1,10 @@
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface VinylDiscProps {
   isPlaying: boolean;
@@ -9,6 +15,7 @@ interface VinylDiscProps {
 }
 
 const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }: VinylDiscProps) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const progress = duration > 0 ? (elapsed / duration) * 100 : 0;
   
   const formatTime = (seconds: number) => {
@@ -18,105 +25,124 @@ const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }
   };
 
   return (
-    <div className={cn("relative", className)}>
-      {/* Outer glow */}
-      <div className="absolute inset-0 rounded-full bg-primary/20 blur-3xl animate-pulse-glow" />
-      
-      {/* Vinyl disc */}
-      <div
-        className={cn(
-          "relative w-64 h-64 md:w-80 md:h-80 rounded-full",
-          "bg-vinyl-dark shadow-2xl",
-          "transition-all duration-500",
-          isPlaying ? "animate-spin-slow" : ""
-        )}
-        style={{
-          background: `
-            radial-gradient(circle at center,
-              transparent 0%,
-              transparent 15%,
-              hsl(var(--vinyl-groove)) 15.5%,
-              hsl(var(--vinyl-dark)) 16%,
-              hsl(var(--vinyl-dark)) 18%,
-              hsl(var(--vinyl-groove)) 18.5%,
-              hsl(var(--vinyl-dark)) 19%,
-              hsl(var(--vinyl-dark)) 25%,
-              hsl(var(--vinyl-groove)) 25.5%,
-              hsl(var(--vinyl-dark)) 26%,
-              hsl(var(--vinyl-dark)) 35%,
-              hsl(var(--vinyl-groove)) 35.5%,
-              hsl(var(--vinyl-dark)) 36%,
-              hsl(var(--vinyl-dark)) 45%,
-              hsl(var(--vinyl-groove)) 45.5%,
-              hsl(var(--vinyl-dark)) 46%,
-              hsl(var(--vinyl-dark)) 55%,
-              hsl(var(--vinyl-groove)) 55.5%,
-              hsl(var(--vinyl-dark)) 56%,
-              hsl(var(--vinyl-dark)) 65%,
-              hsl(var(--vinyl-groove)) 65.5%,
-              hsl(var(--vinyl-dark)) 66%,
-              hsl(var(--vinyl-dark)) 75%,
-              hsl(var(--vinyl-groove)) 75.5%,
-              hsl(var(--vinyl-dark)) 76%,
-              hsl(var(--vinyl-dark)) 85%,
-              hsl(var(--vinyl-groove)) 85.5%,
-              hsl(var(--vinyl-dark)) 86%,
-              hsl(var(--vinyl-dark)) 100%
-            )
-          `,
-        }}
-      >
-        {/* Light reflection */}
-        <div 
-          className="absolute inset-0 rounded-full opacity-30"
+    <>
+      <div className={cn("relative", className)}>
+        {/* Outer glow */}
+        <div className="absolute inset-0 rounded-full bg-primary/20 blur-3xl animate-pulse-glow" />
+        
+        {/* Vinyl disc */}
+        <div
+          className={cn(
+            "relative w-64 h-64 md:w-80 md:h-80 rounded-full",
+            "bg-vinyl-dark shadow-2xl",
+            "transition-all duration-500",
+            isPlaying ? "animate-spin-slow" : ""
+          )}
           style={{
-            background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%)'
+            background: `
+              radial-gradient(circle at center,
+                transparent 0%,
+                transparent 15%,
+                hsl(var(--vinyl-groove)) 15.5%,
+                hsl(var(--vinyl-dark)) 16%,
+                hsl(var(--vinyl-dark)) 18%,
+                hsl(var(--vinyl-groove)) 18.5%,
+                hsl(var(--vinyl-dark)) 19%,
+                hsl(var(--vinyl-dark)) 25%,
+                hsl(var(--vinyl-groove)) 25.5%,
+                hsl(var(--vinyl-dark)) 26%,
+                hsl(var(--vinyl-dark)) 35%,
+                hsl(var(--vinyl-groove)) 35.5%,
+                hsl(var(--vinyl-dark)) 36%,
+                hsl(var(--vinyl-dark)) 45%,
+                hsl(var(--vinyl-groove)) 45.5%,
+                hsl(var(--vinyl-dark)) 46%,
+                hsl(var(--vinyl-dark)) 55%,
+                hsl(var(--vinyl-groove)) 55.5%,
+                hsl(var(--vinyl-dark)) 56%,
+                hsl(var(--vinyl-dark)) 65%,
+                hsl(var(--vinyl-groove)) 65.5%,
+                hsl(var(--vinyl-dark)) 66%,
+                hsl(var(--vinyl-dark)) 75%,
+                hsl(var(--vinyl-groove)) 75.5%,
+                hsl(var(--vinyl-dark)) 76%,
+                hsl(var(--vinyl-dark)) 85%,
+                hsl(var(--vinyl-groove)) 85.5%,
+                hsl(var(--vinyl-dark)) 86%,
+                hsl(var(--vinyl-dark)) 100%
+              )
+            `,
           }}
-        />
-        
-        {/* Center label with cover art */}
-        <div className="absolute inset-0 flex items-center justify-center">
+        >
+          {/* Light reflection */}
           <div 
-            className={cn(
-              "w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden",
-              "border-4 border-vinyl-groove",
-              "shadow-inner"
-            )}
-          >
-            {coverArt ? (
-              <img 
-                src={coverArt} 
-                alt="Album cover" 
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                <span className="text-primary-foreground font-display text-xl md:text-2xl">VRS</span>
-              </div>
-            )}
+            className="absolute inset-0 rounded-full opacity-30"
+            style={{
+              background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%)'
+            }}
+          />
+          
+          {/* Center label with cover art - clickable */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <button 
+              onClick={() => coverArt && setIsDialogOpen(true)}
+              className={cn(
+                "w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden",
+                "border-4 border-vinyl-groove",
+                "shadow-inner",
+                coverArt && "cursor-pointer hover:scale-105 transition-transform duration-200"
+              )}
+              disabled={!coverArt}
+            >
+              {coverArt ? (
+                <img 
+                  src={coverArt} 
+                  alt="Album cover" 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                  <span className="text-primary-foreground font-display text-xl md:text-2xl">VRS</span>
+                </div>
+              )}
+            </button>
           </div>
+          
+          {/* Center hole */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-background" />
         </div>
-        
-        {/* Center hole */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-background" />
+
+        {/* Progress bar - positioned below */}
+        {duration > 0 && (
+          <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[320px] px-4">
+            <div className="relative h-1.5 bg-muted rounded-full overflow-hidden">
+              <div 
+                className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-1000 ease-linear"
+                style={{ width: `${Math.min(progress, 100)}%` }}
+              />
+            </div>
+            <div className="flex justify-between mt-1.5 text-xs text-muted-foreground font-['Arial']">
+              <span>{formatTime(elapsed)}</span>
+              <span>{formatTime(duration)}</span>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Progress bar - positioned below */}
-      {duration > 0 && (
-        <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[320px] px-4">
-          <div className="relative h-1.5 bg-muted rounded-full overflow-hidden">
-            <div 
-              className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-1000 ease-linear"
-              style={{ width: `${Math.min(progress, 100)}%` }}
+      {/* Cover art dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-md p-0 overflow-hidden bg-transparent border-none">
+          <DialogTitle className="sr-only">Album Cover</DialogTitle>
+          {coverArt && (
+            <img 
+              src={coverArt} 
+              alt="Album cover" 
+              className="w-full h-auto rounded-lg shadow-2xl"
             />
-          </div>
-          <div className="flex justify-between mt-1.5 text-xs text-muted-foreground font-['Arial']">
-            <span>{formatTime(elapsed)}</span>
-            <span>{formatTime(duration)}</span>
-          </div>
-        </div>
-      )}
-    </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
