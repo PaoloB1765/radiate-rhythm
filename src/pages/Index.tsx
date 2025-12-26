@@ -47,6 +47,9 @@ const Index = () => {
             <Radio className="w-4 h-4" />
             <span>La radio che ti porta negli anni d'oro della Musica</span>
           </p>
+          <p className="text-muted-foreground/70 text-xs">
+            Clicca sul logo VRS per scoprire di più su Viva RadioStar
+          </p>
         </header>
 
         {/* Vinyl disc visualization */}
