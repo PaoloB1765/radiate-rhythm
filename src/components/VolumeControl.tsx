@@ -13,7 +13,7 @@ const VolumeControl = ({ volume, onVolumeChange, onMuteToggle, isMuted }: Volume
   const VolumeIcon = isMuted || volume === 0 ? VolumeX : volume < 0.5 ? Volume1 : Volume2;
 
   return (
-    <div className="flex items-center gap-3 w-full max-w-xs">
+    <div className="flex items-center gap-3 w-full max-w-sm">
       <button
         onClick={onMuteToggle}
         className={cn(
