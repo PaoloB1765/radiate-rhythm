@@ -30,18 +30,6 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     audio.preload = "auto";
     audio.crossOrigin = "anonymous";
     
-    // Add 10-second buffer to prevent skipping
-    if ('mozAutoplayEnabled' in audio || 'webkitAudioDecodedByteCount' in audio) {
-      // Firefox/Safari specific handling
-    }
-    
-    // Set buffer size hint via MediaSource if available
-    try {
-      (audio as any).bufferSize = 10;
-    } catch (e) {
-      // Not all browsers support this
-    }
-    
     audioRef.current = audio;
 
     const handleCanPlay = () => {
@@ -142,12 +130,35 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       // Setup audio analyser before playing
       setupAudioAnalyser();
       
-      audio.play().catch((error) => {
+      // Start with muted audio, then unmute after 10 seconds to allow 30-second buffer to build
+      const originalVolume = audio.volume;
+      audio.volume = 0;
+      
+      audio.play().then(() => {
+        // Gradually restore volume after 10 seconds (buffer building time)
+        setTimeout(() => {
+          // Smooth volume fade-in over 500ms
+          const fadeSteps = 10;
+          const fadeInterval = 50;
+          let currentStep = 0;
+          
+          const fadeIn = setInterval(() => {
+            currentStep++;
+            if (audioRef.current) {
+              audioRef.current.volume = (isMuted ? 0 : volume) * (currentStep / fadeSteps);
+            }
+            if (currentStep >= fadeSteps) {
+              clearInterval(fadeIn);
+            }
+          }, fadeInterval);
+        }, 10000); // 10 seconds delay for buffer
+      }).catch((error) => {
         console.error("Playback failed:", error);
         setIsLoading(false);
+        audio.volume = originalVolume;
       });
     }
-  }, [isPlaying, setupAudioAnalyser]);
+  }, [isPlaying, setupAudioAnalyser, volume, isMuted]);
 
   const setVolume = useCallback((value: number) => {
     setVolumeState(value);
