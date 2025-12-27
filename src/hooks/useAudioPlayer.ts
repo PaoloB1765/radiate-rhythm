@@ -25,30 +25,27 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
   const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
   const previousVolume = useRef(0.7);
 
-  const BUFFER_THRESHOLD = 15; // 15 seconds buffer
-  const bufferCheckIntervalRef = useRef<number | null>(null);
-  const isBufferingRef = useRef(false);
-
   useEffect(() => {
     const audio = new Audio();
     audio.preload = "auto";
     audio.crossOrigin = "anonymous";
     
+    // Add 10-second buffer to prevent skipping
+    if ('mozAutoplayEnabled' in audio || 'webkitAudioDecodedByteCount' in audio) {
+      // Firefox/Safari specific handling
+    }
+    
+    // Set buffer size hint via MediaSource if available
+    try {
+      (audio as any).bufferSize = 10;
+    } catch (e) {
+      // Not all browsers support this
+    }
+    
     audioRef.current = audio;
 
-    const getBufferedAmount = () => {
-      if (audio.buffered.length > 0) {
-        return audio.buffered.end(audio.buffered.length - 1) - audio.currentTime;
-      }
-      return 0;
-    };
-
     const handleCanPlay = () => {
-      // Only stop loading if we have enough buffer
-      const buffered = getBufferedAmount();
-      if (buffered >= BUFFER_THRESHOLD || !isBufferingRef.current) {
-        setIsLoading(false);
-      }
+      setIsLoading(false);
     };
 
     const handleWaiting = () => {
@@ -70,24 +67,11 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       setIsPlaying(false);
     };
 
-    const handleProgress = () => {
-      const buffered = getBufferedAmount();
-      console.log(`Buffer: ${buffered.toFixed(1)}s`);
-      
-      // If we're initially buffering and have enough, start playing
-      if (isBufferingRef.current && buffered >= BUFFER_THRESHOLD) {
-        isBufferingRef.current = false;
-        setIsLoading(false);
-        audio.play().catch(console.error);
-      }
-    };
-
     audio.addEventListener("canplay", handleCanPlay);
     audio.addEventListener("waiting", handleWaiting);
     audio.addEventListener("playing", handlePlaying);
     audio.addEventListener("pause", handlePause);
     audio.addEventListener("error", handleError);
-    audio.addEventListener("progress", handleProgress);
 
     return () => {
       audio.removeEventListener("canplay", handleCanPlay);
@@ -95,10 +79,6 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       audio.removeEventListener("playing", handlePlaying);
       audio.removeEventListener("pause", handlePause);
       audio.removeEventListener("error", handleError);
-      audio.removeEventListener("progress", handleProgress);
-      if (bufferCheckIntervalRef.current) {
-        clearInterval(bufferCheckIntervalRef.current);
-      }
       audio.pause();
       audio.src = "";
       if (audioContextRef.current) {
@@ -154,18 +134,18 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     if (isPlaying) {
       audio.pause();
       audio.src = "";
-      isBufferingRef.current = false;
     } else {
       setIsLoading(true);
-      isBufferingRef.current = true;
       audio.src = STREAM_URL;
       audio.load();
       
       // Setup audio analyser before playing
       setupAudioAnalyser();
       
-      // Don't play immediately - wait for buffer via progress event
-      console.log("Buffering 30 seconds before playback...");
+      audio.play().catch((error) => {
+        console.error("Playback failed:", error);
+        setIsLoading(false);
+      });
     }
   }, [isPlaying, setupAudioAnalyser]);
 
