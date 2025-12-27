@@ -25,7 +25,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
   const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
   const previousVolume = useRef(0.7);
 
-  const BUFFER_THRESHOLD = 30; // 30 seconds buffer
+  const BUFFER_THRESHOLD = 15; // 15 seconds buffer
   const bufferCheckIntervalRef = useRef<number | null>(null);
   const isBufferingRef = useRef(false);
 
