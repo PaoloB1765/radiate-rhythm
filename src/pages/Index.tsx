@@ -40,12 +40,15 @@ const Index = () => {
             <img 
               src={vrsLogo} 
               alt="Viva RadioStar Logo" 
-              className="w-32 h-32 md:w-44 md:h-44 object-contain animate-float hover:scale-105 transition-transform"
+              className="w-40 h-40 md:w-52 md:h-52 object-contain animate-float hover:scale-105 transition-transform"
             />
           </a>
           <p className="text-muted-foreground text-sm flex items-center justify-center gap-2">
             <Radio className="w-4 h-4" />
             <span>La radio che ti porta negli anni d'oro della Musica</span>
+          </p>
+          <p className="text-muted-foreground/70 text-xs">
+            Clicca il logo VRS per scoprire di più su Viva RadioStar
           </p>
         </header>
 
