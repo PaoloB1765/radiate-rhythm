@@ -130,32 +130,9 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       // Setup audio analyser before playing
       setupAudioAnalyser();
       
-      // Start with muted audio, then unmute after 10 seconds to allow 30-second buffer to build
-      const originalVolume = audio.volume;
-      audio.volume = 0;
-      
-      audio.play().then(() => {
-        // Gradually restore volume after 2 seconds (buffer building time)
-        setTimeout(() => {
-          // Smooth volume fade-in over 500ms
-          const fadeSteps = 10;
-          const fadeInterval = 50;
-          let currentStep = 0;
-          
-          const fadeIn = setInterval(() => {
-            currentStep++;
-            if (audioRef.current) {
-              audioRef.current.volume = (isMuted ? 0 : volume) * (currentStep / fadeSteps);
-            }
-            if (currentStep >= fadeSteps) {
-              clearInterval(fadeIn);
-            }
-          }, fadeInterval);
-        }, 2000); // 2 seconds delay for buffer
-      }).catch((error) => {
+      audio.play().catch((error) => {
         console.error("Playback failed:", error);
         setIsLoading(false);
-        audio.volume = originalVolume;
       });
     }
   }, [isPlaying, setupAudioAnalyser, volume, isMuted]);
