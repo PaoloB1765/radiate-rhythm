@@ -86,8 +86,8 @@ const VUMeter = ({ analyser, isPlaying }: VUMeterProps) => {
   return (
     <div className="glass-card p-4 w-full max-w-md">
       <div className="flex items-center gap-2">
-        <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold w-6">
-          -∞
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold w-8">
+          -16
         </span>
         <div className="flex gap-[3px] flex-1">
           {Array.from({ length: LED_COUNT }).map((_, index) => {
@@ -105,8 +105,8 @@ const VUMeter = ({ analyser, isPlaying }: VUMeterProps) => {
             );
           })}
         </div>
-        <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold w-6 text-right">
-          +24
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold w-8 text-right">
+          +6
         </span>
       </div>
     </div>
