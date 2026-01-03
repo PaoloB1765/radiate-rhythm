@@ -32,7 +32,7 @@ const Index = () => {
       <main className="flex flex-col items-center gap-8 md:gap-10 w-full max-w-lg">
         {/* Logo and header */}
         <header className="flex flex-col items-center gap-4">
-          <div className="flex items-center gap-4">
+          <div className="relative flex items-center justify-center w-full">
             <a 
               href="https://www.vivaradiostar.it" 
               target="_blank" 
@@ -48,7 +48,7 @@ const Index = () => {
               href="https://www.facebook.com/share/1BxxaVKhvM/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground/70 hover:text-primary transition-colors"
+              className="absolute right-0 md:right-[-60px] text-muted-foreground/70 hover:text-primary transition-colors"
             >
               <Facebook className="w-8 h-8" />
             </a>
