@@ -6,7 +6,7 @@ import NowPlaying from "@/components/NowPlaying";
 import VUMeter from "@/components/VUMeter";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useNowPlaying } from "@/hooks/useNowPlaying";
-import { Radio } from "lucide-react";
+import { Radio, Facebook } from "lucide-react";
 
 const Index = () => {
   const { isPlaying, isLoading, volume, isMuted, analyser, togglePlay, setVolume, toggleMute } = useAudioPlayer();
@@ -97,7 +97,15 @@ const Index = () => {
       </main>
 
       {/* Footer */}
-      <footer className="absolute bottom-4 text-center">
+      <footer className="absolute bottom-4 flex flex-col items-center gap-2">
+        <a
+          href="https://www.facebook.com/share/1BxxaVKhvM/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-muted-foreground/70 hover:text-primary transition-colors"
+        >
+          <Facebook className="w-5 h-5" />
+        </a>
         <p className="text-xs text-muted-foreground/50">
           Streaming live • Powered by VRS
         </p>
