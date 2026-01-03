@@ -135,7 +135,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       audio.volume = 0;
       
       audio.play().then(() => {
-        // Gradually restore volume after 10 seconds (buffer building time)
+        // Gradually restore volume after 2 seconds (buffer building time)
         setTimeout(() => {
           // Smooth volume fade-in over 500ms
           const fadeSteps = 10;
@@ -151,7 +151,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
               clearInterval(fadeIn);
             }
           }, fadeInterval);
-        }, 10000); // 10 seconds delay for buffer
+        }, 2000); // 2 seconds delay for buffer
       }).catch((error) => {
         console.error("Playback failed:", error);
         setIsLoading(false);
