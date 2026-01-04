@@ -31,8 +31,9 @@ const Index = () => {
       />
       
       {/* Decorative elements */}
-      <div className={`absolute top-10 left-10 w-32 h-32 rounded-full bg-secondary/10 blur-3xl transition-all duration-700 ${isPlaying ? 'opacity-100 scale-110' : 'opacity-50 scale-100'}`} />
-      <div className={`absolute bottom-20 right-10 w-40 h-40 rounded-full bg-primary/10 blur-3xl transition-all duration-700 ${isPlaying ? 'opacity-100 scale-125' : 'opacity-40 scale-100'}`} />
+      <div className={`absolute top-10 left-10 w-40 h-40 rounded-full bg-secondary/20 blur-3xl transition-all duration-700 ${isPlaying ? 'opacity-100 scale-150' : 'opacity-50 scale-100'}`} />
+      <div className={`absolute bottom-20 right-10 w-48 h-48 rounded-full bg-primary/20 blur-3xl transition-all duration-700 ${isPlaying ? 'opacity-100 scale-150' : 'opacity-40 scale-100'}`} />
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-primary/15 blur-[100px] transition-all duration-700 ${isPlaying ? 'opacity-100 scale-125' : 'opacity-0 scale-100'}`} />
 
       {/* Main content */}
       <main className="flex flex-col items-center gap-8 md:gap-10 w-full max-w-lg">
