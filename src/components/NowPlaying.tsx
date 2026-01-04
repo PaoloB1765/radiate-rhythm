@@ -25,9 +25,22 @@ const NowPlaying = ({ artist, title, isPlaying, nextArtist, nextTitle, nextCover
       
       {title ? (
         <div className="space-y-1">
-          <h2 className="font-['Arial'] text-xl md:text-2xl text-foreground truncate">
-            {title}
-          </h2>
+          <div className="overflow-hidden">
+            {title.length > 33 ? (
+              <div className="flex whitespace-nowrap animate-marquee-continuous">
+                <h2 className="font-['Arial'] text-xl md:text-2xl text-foreground pr-8">
+                  {title}
+                </h2>
+                <h2 className="font-['Arial'] text-xl md:text-2xl text-foreground pr-8">
+                  {title}
+                </h2>
+              </div>
+            ) : (
+              <h2 className="font-['Arial'] text-xl md:text-2xl text-foreground whitespace-nowrap">
+                {title}
+              </h2>
+            )}
+          </div>
           <p className="text-muted-foreground text-base md:text-lg truncate">
             {artist || "Unknown Artist"}
           </p>

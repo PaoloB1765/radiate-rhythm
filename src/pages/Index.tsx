@@ -6,7 +6,7 @@ import NowPlaying from "@/components/NowPlaying";
 import VUMeter from "@/components/VUMeter";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useNowPlaying } from "@/hooks/useNowPlaying";
-import { Radio } from "lucide-react";
+import { Radio, Facebook } from "lucide-react";
 
 const Index = () => {
   const { isPlaying, isLoading, volume, isMuted, analyser, togglePlay, setVolume, toggleMute } = useAudioPlayer();
@@ -16,33 +16,50 @@ const Index = () => {
     <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative overflow-hidden">
       {/* Background gradients */}
       <div 
-        className="absolute inset-0 -z-10"
-        style={{ background: 'var(--gradient-hero)' }}
+        className="absolute inset-0 -z-10 transition-opacity duration-700"
+        style={{ 
+          background: 'var(--gradient-hero)',
+          opacity: isPlaying ? 1 : 0.6
+        }}
       />
       <div 
-        className="absolute inset-0 -z-10"
-        style={{ background: 'var(--gradient-glow)' }}
+        className="absolute inset-0 -z-10 transition-opacity duration-700"
+        style={{ 
+          background: 'var(--gradient-glow)',
+          opacity: isPlaying ? 1 : 0.4
+        }}
       />
       
       {/* Decorative elements */}
-      <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-secondary/10 blur-3xl" />
-      <div className="absolute bottom-20 right-10 w-40 h-40 rounded-full bg-primary/10 blur-3xl" />
+      <div className={`absolute top-10 left-10 w-40 h-40 rounded-full bg-secondary/20 blur-3xl transition-all duration-700 ${isPlaying ? 'opacity-100 scale-150' : 'opacity-50 scale-100'}`} />
+      <div className={`absolute bottom-20 right-10 w-48 h-48 rounded-full bg-primary/20 blur-3xl transition-all duration-700 ${isPlaying ? 'opacity-100 scale-150' : 'opacity-40 scale-100'}`} />
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-primary/15 blur-[100px] transition-all duration-700 ${isPlaying ? 'opacity-100 scale-125' : 'opacity-0 scale-100'}`} />
 
       {/* Main content */}
       <main className="flex flex-col items-center gap-8 md:gap-10 w-full max-w-lg">
         {/* Logo and header */}
         <header className="flex flex-col items-center gap-4">
-          <a 
-            href="https://www.vivaradiostar.it" 
-            target="_blank" 
-            rel="noopener noreferrer"
-          >
-            <img 
-              src={vrsLogo} 
-              alt="Viva RadioStar Logo" 
-              className="w-40 h-40 md:w-52 md:h-52 object-contain animate-float hover:scale-105 transition-transform"
-            />
-          </a>
+          <div className="relative flex items-center justify-center w-full">
+            <a 
+              href="https://www.vivaradiostar.it" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <img 
+                src={vrsLogo} 
+                alt="Viva RadioStar Logo" 
+                className={`w-40 h-40 md:w-52 md:h-52 object-contain hover:scale-105 transition-transform ${isPlaying ? 'animate-float' : ''}`}
+              />
+            </a>
+            <a
+              href="https://www.facebook.com/share/1BxxaVKhvM/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute right-0 md:right-[-60px] text-muted-foreground/70 hover:text-primary transition-colors"
+            >
+              <Facebook className="w-8 h-8" />
+            </a>
+          </div>
           <p className="text-muted-foreground text-sm flex items-center justify-center gap-2">
             <Radio className="w-4 h-4" />
             <span>La radio che ti porta negli anni d'oro della Musica</span>
