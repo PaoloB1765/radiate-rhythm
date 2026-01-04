@@ -92,12 +92,17 @@ export default {
           "0%": { transform: "translateX(0%)" },
           "100%": { transform: "translateX(-100%)" },
         },
+        "marquee-continuous": {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "spin-slow": "spin 8s linear infinite",
         "marquee": "marquee 8s linear infinite",
+        "marquee-continuous": "marquee-continuous 10s linear infinite",
       },
     },
   },
