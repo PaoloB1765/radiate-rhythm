@@ -47,7 +47,7 @@ const Index = () => {
               <img 
                 src={vrsLogo} 
                 alt="Viva RadioStar Logo" 
-                className="w-40 h-40 md:w-52 md:h-52 object-contain animate-float hover:scale-105 transition-transform"
+                className={`w-40 h-40 md:w-52 md:h-52 object-contain hover:scale-105 transition-transform ${isPlaying ? 'animate-float' : ''}`}
               />
             </a>
             <a
