@@ -16,17 +16,23 @@ const Index = () => {
     <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative overflow-hidden">
       {/* Background gradients */}
       <div 
-        className="absolute inset-0 -z-10"
-        style={{ background: 'var(--gradient-hero)' }}
+        className="absolute inset-0 -z-10 transition-opacity duration-700"
+        style={{ 
+          background: 'var(--gradient-hero)',
+          opacity: isPlaying ? 1 : 0.6
+        }}
       />
       <div 
-        className="absolute inset-0 -z-10"
-        style={{ background: 'var(--gradient-glow)' }}
+        className="absolute inset-0 -z-10 transition-opacity duration-700"
+        style={{ 
+          background: 'var(--gradient-glow)',
+          opacity: isPlaying ? 1 : 0.4
+        }}
       />
       
       {/* Decorative elements */}
-      <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-secondary/10 blur-3xl" />
-      <div className="absolute bottom-20 right-10 w-40 h-40 rounded-full bg-primary/10 blur-3xl" />
+      <div className={`absolute top-10 left-10 w-32 h-32 rounded-full bg-secondary/10 blur-3xl transition-all duration-700 ${isPlaying ? 'opacity-100 scale-110' : 'opacity-50 scale-100'}`} />
+      <div className={`absolute bottom-20 right-10 w-40 h-40 rounded-full bg-primary/10 blur-3xl transition-all duration-700 ${isPlaying ? 'opacity-100 scale-125' : 'opacity-40 scale-100'}`} />
 
       {/* Main content */}
       <main className="flex flex-col items-center gap-8 md:gap-10 w-full max-w-lg">
