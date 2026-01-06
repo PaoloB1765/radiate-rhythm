@@ -6,11 +6,22 @@ import NowPlaying from "@/components/NowPlaying";
 import VUMeter from "@/components/VUMeter";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useNowPlaying } from "@/hooks/useNowPlaying";
+import { useMediaSession } from "@/hooks/useMediaSession";
 import { Radio, Facebook } from "lucide-react";
 
 const Index = () => {
   const { isPlaying, isLoading, volume, isMuted, analyser, togglePlay, setVolume, toggleMute } = useAudioPlayer();
   const nowPlaying = useNowPlaying(isPlaying);
+
+  // Media Session API for lock screen controls and artwork
+  useMediaSession({
+    title: nowPlaying.title,
+    artist: nowPlaying.artist,
+    coverArt: nowPlaying.coverArt,
+    isPlaying,
+    onPlay: togglePlay,
+    onPause: togglePlay,
+  });
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative overflow-hidden">
