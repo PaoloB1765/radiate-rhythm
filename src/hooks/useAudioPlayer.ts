@@ -81,6 +81,29 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     }
   }, [volume, isMuted]);
 
+  // Autoplay on mount
+  useEffect(() => {
+    const attemptAutoplay = () => {
+      const audio = audioRef.current;
+      if (!audio || isPlaying) return;
+
+      setIsLoading(true);
+      audio.src = STREAM_URL;
+      audio.load();
+      
+      setupAudioAnalyser();
+      
+      audio.play().catch((error) => {
+        console.warn("Autoplay blocked by browser:", error);
+        setIsLoading(false);
+      });
+    };
+
+    // Small delay to ensure everything is initialized
+    const timer = setTimeout(attemptAutoplay, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   const setupAudioAnalyser = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
