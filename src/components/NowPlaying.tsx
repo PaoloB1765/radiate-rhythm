@@ -46,8 +46,8 @@ const NowPlaying = ({ artist, title, album, isPlaying, nextArtist, nextTitle, ne
             {artist || "Unknown Artist"}
           </p>
           {album && (
-            <p className="text-muted-foreground/70 text-sm truncate italic">
-              {album}
+            <p className="text-muted-foreground/70 text-sm truncate">
+              <span>Album: </span><span className="italic">{album}</span>
             </p>
           )}
         </div>
