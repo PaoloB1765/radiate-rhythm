@@ -4,13 +4,14 @@ import { cn } from "@/lib/utils";
 interface NowPlayingProps {
   artist: string;
   title: string;
+  album?: string;
   isPlaying: boolean;
   nextArtist?: string;
   nextTitle?: string;
   nextCoverArt?: string;
 }
 
-const NowPlaying = ({ artist, title, isPlaying, nextArtist, nextTitle, nextCoverArt }: NowPlayingProps) => {
+const NowPlaying = ({ artist, title, album, isPlaying, nextArtist, nextTitle, nextCoverArt }: NowPlayingProps) => {
   return (
     <div className="glass-card p-4 md:p-6 w-full max-w-md">
       <div className="flex items-center gap-3 mb-3">
@@ -44,6 +45,11 @@ const NowPlaying = ({ artist, title, isPlaying, nextArtist, nextTitle, nextCover
           <p className="text-muted-foreground text-base md:text-lg truncate">
             {artist || "Unknown Artist"}
           </p>
+          {album && (
+            <p className="text-muted-foreground/70 text-sm truncate italic">
+              {album}
+            </p>
+          )}
         </div>
       ) : (
         <div className="flex items-center gap-3 text-muted-foreground">
