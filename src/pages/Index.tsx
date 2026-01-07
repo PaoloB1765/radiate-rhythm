@@ -107,6 +107,7 @@ const Index = () => {
         <NowPlaying 
           artist={nowPlaying.artist}
           title={nowPlaying.title}
+          album={nowPlaying.album}
           isPlaying={isPlaying}
           nextArtist={nowPlaying.nextArtist}
           nextTitle={nowPlaying.nextTitle}

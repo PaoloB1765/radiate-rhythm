@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 interface NowPlayingData {
   artist: string;
   title: string;
+  album: string;
   coverArt: string;
   duration: number;
   elapsed: number;
@@ -18,6 +19,7 @@ export const useNowPlaying = (isPlaying: boolean) => {
   const [nowPlaying, setNowPlaying] = useState<NowPlayingData>({
     artist: "",
     title: "",
+    album: "",
     coverArt: "",
     duration: 0,
     elapsed: 0,
@@ -54,6 +56,7 @@ export const useNowPlaying = (isPlaying: boolean) => {
         setNowPlaying({
           artist: nowPlayingTrack.artist || "",
           title: nowPlayingTrack.title || "",
+          album: nowPlayingTrack.album || "",
           coverArt: nowPlayingTrack.art || data.now_playing?.song?.art || "",
           duration,
           elapsed,
