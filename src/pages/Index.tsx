@@ -1,4 +1,5 @@
 import vrsLogo from "@/assets/vrs-logo.jpg";
+import VinylDisc from "@/components/VinylDisc";
 import PlayButton from "@/components/PlayButton";
 import VolumeControl from "@/components/VolumeControl";
 import NowPlaying from "@/components/NowPlaying";
@@ -6,7 +7,7 @@ import VUMeter from "@/components/VUMeter";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useNowPlaying } from "@/hooks/useNowPlaying";
 import { useMediaSession } from "@/hooks/useMediaSession";
-import { Radio, Facebook, Music } from "lucide-react";
+import { Radio, Facebook } from "lucide-react";
 
 const Index = () => {
   const { isPlaying, isLoading, volume, isMuted, analyser, togglePlay, setVolume, toggleMute } = useAudioPlayer();
@@ -46,10 +47,10 @@ const Index = () => {
       <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-primary/15 blur-[100px] transition-all duration-700 ${isPlaying ? 'opacity-100 scale-125' : 'opacity-0 scale-100'}`} />
 
       {/* Main content - Horizontal layout */}
-      <main className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 lg:gap-24 w-full max-w-6xl min-h-[60vh] md:min-h-0">
+      <main className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 w-full max-w-5xl">
         
         {/* Left section: Logo */}
-        <div className="flex flex-col items-center justify-center gap-3 md:gap-4 md:min-w-[140px]">
+        <div className="flex flex-col items-center gap-2 md:gap-3">
           <a 
             href="https://www.vivaradiostar.it" 
             target="_blank" 
@@ -58,7 +59,7 @@ const Index = () => {
             <img 
               src={vrsLogo} 
               alt="Viva RadioStar Logo" 
-              className={`w-28 h-28 md:w-36 md:h-36 object-contain hover:scale-105 transition-transform ${isPlaying ? 'animate-float' : ''}`}
+              className={`w-24 h-24 md:w-32 md:h-32 object-contain hover:scale-105 transition-transform ${isPlaying ? 'animate-float' : ''}`}
             />
           </a>
           <a
@@ -69,38 +70,30 @@ const Index = () => {
           >
             <Facebook className="w-6 h-6" />
           </a>
-          <div className="text-muted-foreground text-xs flex flex-col items-center gap-1 text-center max-w-[140px]">
-            <Radio className="w-3.5 h-3.5" />
-            <span>La radio che ti porta</span>
-            <span>negli anni d'oro della Musica</span>
-          </div>
+          <p className="text-muted-foreground text-xs flex items-center gap-1 text-center max-w-[150px]">
+            <Radio className="w-3 h-3 flex-shrink-0" />
+            <span>Gli anni d'oro della Musica</span>
+          </p>
         </div>
 
-        {/* Center section: Cover Art */}
-        <div className="flex flex-col items-center justify-center gap-12">
-          <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-lg overflow-hidden shadow-xl">
-            {nowPlaying.coverArt ? (
-              <img 
-                src={nowPlaying.coverArt} 
-                alt="Cover Art" 
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-muted flex items-center justify-center">
-                <Music className="w-12 h-12 text-muted-foreground/50" />
-              </div>
-            )}
-          </div>
+        {/* Center section: Vinyl disc */}
+        <div className="flex flex-col items-center gap-4">
+          <VinylDisc 
+            isPlaying={isPlaying} 
+            coverArt={nowPlaying.coverArt}
+            duration={nowPlaying.duration}
+            elapsed={nowPlaying.elapsed}
+            className="w-40 h-40 md:w-48 md:h-48"
+          />
           <PlayButton 
             isPlaying={isPlaying} 
             isLoading={isLoading} 
             onClick={togglePlay}
-            size="small"
           />
         </div>
 
         {/* Right section: Now playing + Controls */}
-        <div className="flex flex-col items-center justify-center gap-5 md:gap-6 md:min-w-[200px]">
+        <div className="flex flex-col items-center gap-4 md:gap-5">
           <VUMeter 
             analyser={analyser}
             isPlaying={isPlaying}
