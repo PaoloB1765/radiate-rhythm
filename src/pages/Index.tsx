@@ -77,7 +77,7 @@ const Index = () => {
         </div>
 
         {/* Center section: Cover Art */}
-        <div className="flex flex-col items-center justify-center gap-12">
+        <div className="flex flex-col items-center justify-center gap-6">
           <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-lg overflow-hidden shadow-xl">
             {nowPlaying.coverArt ? (
               <img 
@@ -97,14 +97,14 @@ const Index = () => {
             onClick={togglePlay}
             size="small"
           />
-        </div>
-
-        {/* Right section: Now playing + Controls */}
-        <div className="flex flex-col items-center justify-center gap-5 md:gap-6 md:min-w-[200px]">
           <VUMeter 
             analyser={analyser}
             isPlaying={isPlaying}
           />
+        </div>
+
+        {/* Right section: Now playing + Controls */}
+        <div className="flex flex-col items-center justify-center gap-5 md:gap-6 md:min-w-[200px]">
           <NowPlaying 
             artist={nowPlaying.artist}
             title={nowPlaying.title}
