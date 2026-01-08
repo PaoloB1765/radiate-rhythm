@@ -1,5 +1,4 @@
 import vrsLogo from "@/assets/vrs-logo.jpg";
-import VinylDisc from "@/components/VinylDisc";
 import PlayButton from "@/components/PlayButton";
 import VolumeControl from "@/components/VolumeControl";
 import NowPlaying from "@/components/NowPlaying";
@@ -7,7 +6,7 @@ import VUMeter from "@/components/VUMeter";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useNowPlaying } from "@/hooks/useNowPlaying";
 import { useMediaSession } from "@/hooks/useMediaSession";
-import { Radio, Facebook } from "lucide-react";
+import { Radio, Facebook, Music } from "lucide-react";
 
 const Index = () => {
   const { isPlaying, isLoading, volume, isMuted, analyser, togglePlay, setVolume, toggleMute } = useAudioPlayer();
@@ -77,15 +76,21 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Center section: Vinyl disc */}
-        <div className="flex flex-col items-center justify-center gap-8">
-          <VinylDisc 
-            isPlaying={isPlaying} 
-            coverArt={nowPlaying.coverArt}
-            duration={nowPlaying.duration}
-            elapsed={nowPlaying.elapsed}
-            className="w-32 h-32 md:w-40 md:h-40"
-          />
+        {/* Center section: Cover Art */}
+        <div className="flex flex-col items-center justify-center gap-12">
+          <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-lg overflow-hidden shadow-xl">
+            {nowPlaying.coverArt ? (
+              <img 
+                src={nowPlaying.coverArt} 
+                alt="Cover Art" 
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-muted flex items-center justify-center">
+                <Music className="w-12 h-12 text-muted-foreground/50" />
+              </div>
+            )}
+          </div>
           <PlayButton 
             isPlaying={isPlaying} 
             isLoading={isLoading} 
