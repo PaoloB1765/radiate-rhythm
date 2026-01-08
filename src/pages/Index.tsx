@@ -24,7 +24,7 @@ const Index = () => {
   });
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-6 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative overflow-hidden">
       {/* Background gradients */}
       <div 
         className="absolute inset-0 -z-10 transition-opacity duration-700"
@@ -42,49 +42,54 @@ const Index = () => {
       />
       
       {/* Decorative elements */}
-      <div className={`absolute top-10 left-10 w-32 h-32 rounded-full bg-secondary/20 blur-3xl transition-all duration-700 ${isPlaying ? 'opacity-100 scale-150' : 'opacity-50 scale-100'}`} />
-      <div className={`absolute bottom-20 right-10 w-36 h-36 rounded-full bg-primary/20 blur-3xl transition-all duration-700 ${isPlaying ? 'opacity-100 scale-150' : 'opacity-40 scale-100'}`} />
-      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-primary/15 blur-[100px] transition-all duration-700 ${isPlaying ? 'opacity-100 scale-125' : 'opacity-0 scale-100'}`} />
+      <div className={`absolute top-10 left-10 w-40 h-40 rounded-full bg-secondary/20 blur-3xl transition-all duration-700 ${isPlaying ? 'opacity-100 scale-150' : 'opacity-50 scale-100'}`} />
+      <div className={`absolute bottom-20 right-10 w-48 h-48 rounded-full bg-primary/20 blur-3xl transition-all duration-700 ${isPlaying ? 'opacity-100 scale-150' : 'opacity-40 scale-100'}`} />
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-primary/15 blur-[100px] transition-all duration-700 ${isPlaying ? 'opacity-100 scale-125' : 'opacity-0 scale-100'}`} />
 
-      {/* Main content - Horizontal layout */}
-      <main className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 w-full max-w-5xl">
-        
-        {/* Left section: Logo */}
-        <div className="flex flex-col items-center gap-2 md:gap-3">
-          <a 
-            href="https://www.vivaradiostar.it" 
-            target="_blank" 
-            rel="noopener noreferrer"
-          >
-            <img 
-              src={vrsLogo} 
-              alt="Viva RadioStar Logo" 
-              className={`w-24 h-24 md:w-32 md:h-32 object-contain hover:scale-105 transition-transform ${isPlaying ? 'animate-float' : ''}`}
-            />
-          </a>
-          <a
-            href="https://www.facebook.com/share/1BxxaVKhvM/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground/70 hover:text-primary transition-colors"
-          >
-            <Facebook className="w-6 h-6" />
-          </a>
-          <p className="text-muted-foreground text-xs flex items-center gap-1 text-center max-w-[150px]">
-            <Radio className="w-3 h-3 flex-shrink-0" />
-            <span>Gli anni d'oro della Musica</span>
+      {/* Main content */}
+      <main className="flex flex-col items-center gap-8 md:gap-10 w-full max-w-lg">
+        {/* Logo and header */}
+        <header className="flex flex-col items-center gap-4">
+          <div className="relative flex items-center justify-center w-full">
+            <a 
+              href="https://www.vivaradiostar.it" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <img 
+                src={vrsLogo} 
+                alt="Viva RadioStar Logo" 
+                className={`w-40 h-40 md:w-52 md:h-52 object-contain hover:scale-105 transition-transform ${isPlaying ? 'animate-float' : ''}`}
+              />
+            </a>
+            <a
+              href="https://www.facebook.com/share/1BxxaVKhvM/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute right-0 md:right-[-60px] text-muted-foreground/70 hover:text-primary transition-colors"
+            >
+              <Facebook className="w-8 h-8" />
+            </a>
+          </div>
+          <p className="text-muted-foreground text-sm flex items-center justify-center gap-2">
+            <Radio className="w-4 h-4" />
+            <span>La radio che ti porta negli anni d'oro della Musica</span>
           </p>
-        </div>
+          <p className="text-muted-foreground/70 text-xs">
+            Clicca il logo VRS per scoprire di più su Viva RadioStar
+          </p>
+        </header>
 
-        {/* Center section: Vinyl disc */}
-        <div className="flex flex-col items-center gap-4">
-          <VinylDisc 
-            isPlaying={isPlaying} 
-            coverArt={nowPlaying.coverArt}
-            duration={nowPlaying.duration}
-            elapsed={nowPlaying.elapsed}
-            className="w-40 h-40 md:w-48 md:h-48"
-          />
+        {/* Vinyl disc visualization */}
+        <VinylDisc 
+          isPlaying={isPlaying} 
+          coverArt={nowPlaying.coverArt}
+          duration={nowPlaying.duration}
+          elapsed={nowPlaying.elapsed}
+        />
+
+        {/* Play button */}
+        <div className="mt-4">
           <PlayButton 
             isPlaying={isPlaying} 
             isLoading={isLoading} 
@@ -92,21 +97,25 @@ const Index = () => {
           />
         </div>
 
-        {/* Right section: Now playing + Controls */}
-        <div className="flex flex-col items-center gap-4 md:gap-5">
-          <VUMeter 
-            analyser={analyser}
-            isPlaying={isPlaying}
-          />
-          <NowPlaying 
-            artist={nowPlaying.artist}
-            title={nowPlaying.title}
-            album={nowPlaying.album}
-            isPlaying={isPlaying}
-            nextArtist={nowPlaying.nextArtist}
-            nextTitle={nowPlaying.nextTitle}
-            nextCoverArt={nowPlaying.nextCoverArt}
-          />
+        {/* VU Meter */}
+        <VUMeter 
+          analyser={analyser}
+          isPlaying={isPlaying}
+        />
+
+        {/* Now playing info */}
+        <NowPlaying 
+          artist={nowPlaying.artist}
+          title={nowPlaying.title}
+          album={nowPlaying.album}
+          isPlaying={isPlaying}
+          nextArtist={nowPlaying.nextArtist}
+          nextTitle={nowPlaying.nextTitle}
+          nextCoverArt={nowPlaying.nextCoverArt}
+        />
+
+        {/* Volume control */}
+        <div className="mb-6">
           <VolumeControl
             volume={volume}
             onVolumeChange={setVolume}
@@ -117,7 +126,7 @@ const Index = () => {
       </main>
 
       {/* Footer */}
-      <footer className="absolute bottom-2 text-center">
+      <footer className="absolute bottom-4 text-center">
         <p className="text-xs text-muted-foreground/50">
           Streaming live • Powered by VRS
         </p>
