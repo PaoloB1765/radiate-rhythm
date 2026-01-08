@@ -70,25 +70,27 @@ const Index = () => {
           >
             <Facebook className="w-6 h-6" />
           </a>
-          <p className="text-muted-foreground text-xs flex items-center gap-1.5 text-center max-w-[160px]">
-            <Radio className="w-3.5 h-3.5 flex-shrink-0" />
-            <span>Gli anni d'oro della Musica</span>
-          </p>
+          <div className="text-muted-foreground text-xs flex flex-col items-center gap-1 text-center max-w-[140px]">
+            <Radio className="w-3.5 h-3.5" />
+            <span>La radio che ti porta</span>
+            <span>negli anni d'oro della Musica</span>
+          </div>
         </div>
 
         {/* Center section: Vinyl disc */}
-        <div className="flex flex-col items-center justify-center gap-5">
+        <div className="flex flex-col items-center justify-center gap-8">
           <VinylDisc 
             isPlaying={isPlaying} 
             coverArt={nowPlaying.coverArt}
             duration={nowPlaying.duration}
             elapsed={nowPlaying.elapsed}
-            className="w-44 h-44 md:w-52 md:h-52"
+            className="w-32 h-32 md:w-40 md:h-40"
           />
           <PlayButton 
             isPlaying={isPlaying} 
             isLoading={isLoading} 
             onClick={togglePlay}
+            size="small"
           />
         </div>
 
