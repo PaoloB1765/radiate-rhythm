@@ -115,13 +115,17 @@ const Index = () => {
         />
 
         {/* Volume control */}
-        <div className="mb-6">
+        <div className="mb-6 flex flex-col items-center gap-3">
           <VolumeControl
             volume={volume}
             onVolumeChange={setVolume}
             onMuteToggle={toggleMute}
             isMuted={isMuted}
           />
+          <div className="text-xs text-muted-foreground/70 text-center space-y-1">
+            <p>Nr. Licenza S.I.A.E. : 202600000005</p>
+            <p>Nr. Licenza SCF : 3/5/26</p>
+          </div>
         </div>
       </main>
 
