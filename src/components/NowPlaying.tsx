@@ -27,9 +27,9 @@ const NowPlaying = ({ artist, title, album, isPlaying, nextArtist, nextTitle, ne
       {title ? (
         <div className="space-y-1">
           <h2 className={cn(
-            "font-['Arial'] text-foreground",
+            "font-['Arial'] text-foreground w-full",
             title.length > 28 
-              ? "text-sm md:text-base" 
+              ? "text-base md:text-lg leading-tight" 
               : "text-xl md:text-2xl"
           )}>
             {title}
