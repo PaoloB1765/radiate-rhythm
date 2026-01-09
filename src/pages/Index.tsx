@@ -66,7 +66,7 @@ const Index = () => {
               href="https://www.facebook.com/share/1BxxaVKhvM/"
               target="_blank"
               rel="noopener noreferrer"
-              className="absolute right-0 md:right-[-60px] text-muted-foreground/70 hover:text-primary transition-colors"
+              className="absolute right-4 md:right-[-40px] text-muted-foreground/70 hover:text-primary transition-colors"
             >
               <Facebook className="w-8 h-8" />
             </a>
