@@ -1,6 +1,5 @@
 import { Music2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import SongRequest from "./SongRequest";
 
 interface NowPlayingProps {
   artist: string;
@@ -72,9 +71,6 @@ const NowPlaying = ({ artist, title, album, isPlaying, nextArtist, nextTitle, ne
           </div>
         </div>
       )}
-
-      {/* Song Request */}
-      <SongRequest />
     </div>
   );
 };
