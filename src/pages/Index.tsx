@@ -4,6 +4,7 @@ import PlayButton from "@/components/PlayButton";
 import VolumeControl from "@/components/VolumeControl";
 import NowPlaying from "@/components/NowPlaying";
 import VUMeter from "@/components/VUMeter";
+import CastButton from "@/components/CastButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useNowPlaying } from "@/hooks/useNowPlaying";
 import { useMediaSession } from "@/hooks/useMediaSession";
@@ -62,14 +63,17 @@ const Index = () => {
                 className={`w-40 h-40 md:w-52 md:h-52 object-contain hover:scale-105 transition-transform ${isPlaying ? 'animate-float' : ''}`}
               />
             </a>
-            <a
-              href="https://www.facebook.com/share/1BxxaVKhvM/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="absolute right-4 md:right-[-40px] text-muted-foreground/70 hover:text-primary transition-colors"
-            >
-              <Facebook className="w-8 h-8" />
-            </a>
+            <div className="absolute right-4 md:right-[-40px] flex flex-col items-center gap-2">
+              <a
+                href="https://www.facebook.com/share/1BxxaVKhvM/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground/70 hover:text-primary transition-colors"
+              >
+                <Facebook className="w-7 h-7" />
+              </a>
+              <CastButton />
+            </div>
           </div>
           <p className="text-muted-foreground text-sm flex items-center justify-center gap-2">
             <Radio className="w-4 h-4" />
