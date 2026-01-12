@@ -93,11 +93,11 @@ const SongRequest = () => {
             </div>
           ) : songs.length > 0 ? (
             <ScrollArea className="h-[250px]">
-              <div className="space-y-2 pr-4">
+              <div className="space-y-2 pr-3">
                 {songs.map((song) => (
                   <div
                     key={song.request_id}
-                    className="flex items-center gap-2 p-2 rounded-lg bg-background/30 hover:bg-background/50 transition-colors"
+                    className="flex items-center gap-3 p-2 rounded-lg bg-background/30 hover:bg-background/50 transition-colors"
                   >
                     {song.song.art && (
                       <img
@@ -106,7 +106,7 @@ const SongRequest = () => {
                         className="w-10 h-10 rounded object-cover flex-shrink-0"
                       />
                     )}
-                    <div className="flex-1 min-w-0 mr-1">
+                    <div className="flex-1 min-w-0">
                       <p className="text-sm text-foreground truncate">{song.song.title}</p>
                       <p className="text-xs text-muted-foreground truncate">{song.song.artist}</p>
                     </div>
@@ -115,7 +115,7 @@ const SongRequest = () => {
                       variant="ghost"
                       onClick={() => handleRequest(song.request_id)}
                       disabled={isRequesting}
-                      className="flex-shrink-0 text-xs px-3 py-1 h-auto bg-primary/20 hover:bg-primary/40 text-primary whitespace-nowrap"
+                      className="flex-shrink-0 text-xs px-2 py-1 h-auto bg-primary/20 hover:bg-primary/40 text-primary"
                     >
                       {isRequesting ? (
                         <Loader2 className="w-3 h-3 animate-spin" />

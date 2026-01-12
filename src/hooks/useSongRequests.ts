@@ -72,8 +72,8 @@ export const useSongRequests = () => {
         throw new Error(errorData.message || "Impossibile inviare la richiesta");
       }
       
-      setSuccessMessage("Grazie, il brano richiesto sarà messo in programmazione il più presto possibile");
-      setTimeout(() => setSuccessMessage(null), 15000);
+      setSuccessMessage("Richiesta inviata con successo!");
+      setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Errore durante la richiesta");
     } finally {
