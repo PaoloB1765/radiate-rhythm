@@ -27,6 +27,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
   const reconnectAttempts = useRef(0);
   const maxReconnectAttempts = 5;
   const isPlayingRef = useRef(false);
+  const isIntentionalStop = useRef(false);
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -73,12 +74,18 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       setIsLoading(false);
       setIsPlaying(false);
       
+      // Don't reconnect if this was an intentional stop
+      if (isIntentionalStop.current) {
+        isIntentionalStop.current = false;
+        return;
+      }
+      
       // Tenta di riconnettersi automaticamente in caso di errore
       if (reconnectAttempts.current < maxReconnectAttempts) {
         reconnectAttempts.current++;
         console.log(`Tentativo di riconnessione ${reconnectAttempts.current}/${maxReconnectAttempts}`);
         setTimeout(() => {
-          if (audioRef.current) {
+          if (audioRef.current && isPlayingRef.current) {
             audioRef.current.src = STREAM_URL + "?t=" + Date.now();
             audioRef.current.load();
             audioRef.current.play().catch(console.error);
@@ -206,6 +213,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     if (!audio) return;
 
     if (isPlaying) {
+      isIntentionalStop.current = true;
       audio.pause();
       audio.src = "";
     } else {
