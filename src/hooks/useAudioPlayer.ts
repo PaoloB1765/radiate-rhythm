@@ -24,16 +24,28 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
   const [isMuted, setIsMuted] = useState(false);
   const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
   const previousVolume = useRef(0.7);
+  const reconnectAttempts = useRef(0);
+  const maxReconnectAttempts = 5;
 
   useEffect(() => {
     const audio = new Audio();
     audio.preload = "auto";
     audio.crossOrigin = "anonymous";
     
+    // Ottimizzazioni per la riproduzione in background su mobile
+    audio.setAttribute('playsinline', 'true');
+    audio.setAttribute('webkit-playsinline', 'true');
+    
+    // Disabilita il buffering aggressivo per ridurre gli skip
+    if ('mozPreservesPitch' in audio) {
+      (audio as any).mozPreservesPitch = false;
+    }
+    
     audioRef.current = audio;
 
     const handleCanPlay = () => {
       setIsLoading(false);
+      reconnectAttempts.current = 0;
     };
 
     const handleWaiting = () => {
@@ -43,6 +55,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     const handlePlaying = () => {
       setIsLoading(false);
       setIsPlaying(true);
+      reconnectAttempts.current = 0;
     };
 
     const handlePause = () => {
@@ -53,6 +66,31 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       console.error("Audio error:", e);
       setIsLoading(false);
       setIsPlaying(false);
+      
+      // Tenta di riconnettersi automaticamente in caso di errore
+      if (reconnectAttempts.current < maxReconnectAttempts) {
+        reconnectAttempts.current++;
+        console.log(`Tentativo di riconnessione ${reconnectAttempts.current}/${maxReconnectAttempts}`);
+        setTimeout(() => {
+          if (audioRef.current) {
+            audioRef.current.src = STREAM_URL + "?t=" + Date.now();
+            audioRef.current.load();
+            audioRef.current.play().catch(console.error);
+          }
+        }, 1000 * reconnectAttempts.current);
+      }
+    };
+
+    // Gestione stallo audio (comune quando lo schermo si spegne)
+    const handleStalled = () => {
+      console.log("Audio stalled, attempting recovery...");
+      if (audio && isPlaying) {
+        // Forza un refresh dello stream
+        const currentTime = audio.currentTime;
+        audio.src = STREAM_URL + "?t=" + Date.now();
+        audio.load();
+        audio.play().catch(console.error);
+      }
     };
 
     audio.addEventListener("canplay", handleCanPlay);
@@ -60,6 +98,21 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     audio.addEventListener("playing", handlePlaying);
     audio.addEventListener("pause", handlePause);
     audio.addEventListener("error", handleError);
+    audio.addEventListener("stalled", handleStalled);
+
+    // Gestione visibilità pagina per riprendere l'audio
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && audioContextRef.current?.state === 'suspended') {
+        audioContextRef.current.resume();
+      }
+      
+      // Se l'app torna visibile e l'audio dovrebbe essere in riproduzione
+      if (document.visibilityState === 'visible' && isPlaying && audio.paused) {
+        audio.play().catch(console.error);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       audio.removeEventListener("canplay", handleCanPlay);
@@ -67,6 +120,8 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       audio.removeEventListener("playing", handlePlaying);
       audio.removeEventListener("pause", handlePause);
       audio.removeEventListener("error", handleError);
+      audio.removeEventListener("stalled", handleStalled);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       audio.pause();
       audio.src = "";
       if (audioContextRef.current) {
@@ -110,7 +165,10 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
 
     // Create AudioContext only if not already created
     if (!audioContextRef.current) {
-      audioContextRef.current = new AudioContext();
+      audioContextRef.current = new AudioContext({
+        // Latenza bassa per ridurre gli skip
+        latencyHint: 'playback'
+      });
     }
 
     const ctx = audioContextRef.current;
@@ -147,6 +205,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       audio.src = "";
     } else {
       setIsLoading(true);
+      reconnectAttempts.current = 0;
       audio.src = STREAM_URL;
       audio.load();
       
