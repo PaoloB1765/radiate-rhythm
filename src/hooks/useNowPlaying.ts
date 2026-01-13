@@ -1,5 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
+interface SongHistoryItem {
+  artist: string;
+  title: string;
+  coverArt: string;
+  playedAt: number;
+}
+
 interface NowPlayingData {
   artist: string;
   title: string;
@@ -11,6 +18,7 @@ interface NowPlayingData {
   nextArtist: string;
   nextCoverArt: string;
   nextTitle: string;
+  songHistory: SongHistoryItem[];
 }
 
 const NOW_PLAYING_URL = "https://vrs-blackbox.ddns.net/api/nowplaying/vrs";
@@ -27,6 +35,7 @@ export const useNowPlaying = (isPlaying: boolean) => {
     nextArtist: "",
     nextTitle: "",
     nextCoverArt: "",
+    songHistory: [],
   });
   
   const [currentElapsed, setCurrentElapsed] = useState(0);
@@ -52,6 +61,15 @@ export const useNowPlaying = (isPlaying: boolean) => {
       // Next song info from AzuraCast API
       const nextSong = data.playing_next?.song;
       
+      // Song history from AzuraCast API (last 15 songs)
+      const historyData = data.song_history || [];
+      const songHistory: SongHistoryItem[] = historyData.slice(0, 15).map((item: any) => ({
+        artist: item.song?.artist || "",
+        title: item.song?.title || "",
+        coverArt: item.song?.art || "",
+        playedAt: item.played_at || 0,
+      }));
+      
       if (nowPlayingTrack) {
         setNowPlaying({
           artist: nowPlayingTrack.artist || "",
@@ -64,6 +82,7 @@ export const useNowPlaying = (isPlaying: boolean) => {
           nextArtist: nextSong?.artist || "",
           nextTitle: nextSong?.title || "",
           nextCoverArt: nextSong?.art || "",
+          songHistory,
         });
         setCurrentElapsed(elapsed);
       }

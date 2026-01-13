@@ -1,5 +1,15 @@
-import { Music2 } from "lucide-react";
+import { Music2, ChevronDown, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+interface SongHistoryItem {
+  artist: string;
+  title: string;
+  coverArt: string;
+  playedAt: number;
+}
 
 interface NowPlayingProps {
   artist: string;
@@ -9,9 +19,17 @@ interface NowPlayingProps {
   nextArtist?: string;
   nextTitle?: string;
   nextCoverArt?: string;
+  songHistory?: SongHistoryItem[];
 }
 
-const NowPlaying = ({ artist, title, album, isPlaying, nextArtist, nextTitle, nextCoverArt }: NowPlayingProps) => {
+const formatTime = (timestamp: number) => {
+  const date = new Date(timestamp * 1000);
+  return date.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+};
+
+const NowPlaying = ({ artist, title, album, isPlaying, nextArtist, nextTitle, nextCoverArt, songHistory = [] }: NowPlayingProps) => {
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
   return (
     <div className="glass-card p-4 md:p-6 w-full max-w-md">
       <div className="flex items-center gap-3 mb-3">
@@ -70,6 +88,46 @@ const NowPlaying = ({ artist, title, album, isPlaying, nextArtist, nextTitle, ne
             </div>
           </div>
         </div>
+      )}
+
+      {/* Song History */}
+      {songHistory.length > 0 && (
+        <Collapsible open={isHistoryOpen} onOpenChange={setIsHistoryOpen} className="mt-4 pt-3 border-t border-border/30">
+          <CollapsibleTrigger className="flex items-center justify-between w-full group">
+            <span className="text-xs uppercase tracking-widest text-muted-foreground/70 font-semibold flex items-center gap-2">
+              <Clock className="w-3 h-3" />
+              Song History
+            </span>
+            <ChevronDown className={cn(
+              "w-4 h-4 text-muted-foreground/70 transition-transform duration-200",
+              isHistoryOpen && "rotate-180"
+            )} />
+          </CollapsibleTrigger>
+          <CollapsibleContent className="mt-2">
+            <ScrollArea className="h-48 pr-2">
+              <div className="space-y-2">
+                {songHistory.map((song, index) => (
+                  <div key={`${song.playedAt}-${index}`} className="flex items-center gap-3 py-1.5">
+                    {song.coverArt && (
+                      <img 
+                        src={song.coverArt} 
+                        alt="Song cover" 
+                        className="w-8 h-8 rounded object-cover flex-shrink-0"
+                      />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs text-foreground/70 truncate">{song.title}</p>
+                      <p className="text-xs text-muted-foreground/60 truncate">{song.artist}</p>
+                    </div>
+                    <span className="text-xs text-muted-foreground/50 flex-shrink-0">
+                      {formatTime(song.playedAt)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </CollapsibleContent>
+        </Collapsible>
       )}
     </div>
   );
