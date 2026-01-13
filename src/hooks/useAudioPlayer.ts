@@ -26,6 +26,12 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
   const previousVolume = useRef(0.7);
   const reconnectAttempts = useRef(0);
   const maxReconnectAttempts = 5;
+  const isPlayingRef = useRef(false);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
 
   useEffect(() => {
     const audio = new Audio();
@@ -84,9 +90,8 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     // Gestione stallo audio (comune quando lo schermo si spegne)
     const handleStalled = () => {
       console.log("Audio stalled, attempting recovery...");
-      if (audio && isPlaying) {
+      if (audio && isPlayingRef.current) {
         // Forza un refresh dello stream
-        const currentTime = audio.currentTime;
         audio.src = STREAM_URL + "?t=" + Date.now();
         audio.load();
         audio.play().catch(console.error);
@@ -107,7 +112,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       }
       
       // Se l'app torna visibile e l'audio dovrebbe essere in riproduzione
-      if (document.visibilityState === 'visible' && isPlaying && audio.paused) {
+      if (document.visibilityState === 'visible' && isPlayingRef.current && audio.paused) {
         audio.play().catch(console.error);
       }
     };
