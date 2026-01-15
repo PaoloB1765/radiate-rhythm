@@ -28,6 +28,8 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
   const maxReconnectAttempts = 5;
   const isPlayingRef = useRef(false);
   const isIntentionalStop = useRef(false);
+  const heartbeatIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const lastPlaybackTime = useRef<number>(0);
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -97,13 +99,51 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     // Gestione stallo audio (comune quando lo schermo si spegne)
     const handleStalled = () => {
       console.log("Audio stalled, attempting recovery...");
-      if (audio && isPlayingRef.current) {
+      if (audio && isPlayingRef.current && !isIntentionalStop.current) {
         // Forza un refresh dello stream
         audio.src = STREAM_URL + "?t=" + Date.now();
         audio.load();
         audio.play().catch(console.error);
       }
     };
+
+    // Heartbeat: controlla ogni 30 secondi se l'audio è ancora attivo
+    const startHeartbeat = () => {
+      if (heartbeatIntervalRef.current) {
+        clearInterval(heartbeatIntervalRef.current);
+      }
+      
+      heartbeatIntervalRef.current = setInterval(() => {
+        if (!isPlayingRef.current || isIntentionalStop.current) return;
+        
+        const currentTime = audio.currentTime;
+        
+        // Se l'audio dovrebbe suonare ma currentTime non cambia o è in pausa
+        if (audio.paused && isPlayingRef.current && !isIntentionalStop.current) {
+          console.log("Heartbeat: Audio paused unexpectedly, restarting...");
+          audio.src = STREAM_URL + "?t=" + Date.now();
+          audio.load();
+          audio.play().catch(console.error);
+        }
+        
+        // Se currentTime non cambia per 2 cicli consecutivi (potrebbe essere bloccato)
+        if (lastPlaybackTime.current === currentTime && !audio.paused && currentTime > 0) {
+          console.log("Heartbeat: Audio stuck, attempting recovery...");
+          audio.src = STREAM_URL + "?t=" + Date.now();
+          audio.load();
+          audio.play().catch(console.error);
+        }
+        
+        lastPlaybackTime.current = currentTime;
+        
+        // Mantieni l'AudioContext attivo
+        if (audioContextRef.current?.state === 'suspended') {
+          audioContextRef.current.resume().catch(console.error);
+        }
+      }, 30000); // Ogni 30 secondi
+    };
+
+    startHeartbeat();
 
     audio.addEventListener("canplay", handleCanPlay);
     audio.addEventListener("waiting", handleWaiting);
@@ -134,6 +174,9 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       audio.removeEventListener("error", handleError);
       audio.removeEventListener("stalled", handleStalled);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (heartbeatIntervalRef.current) {
+        clearInterval(heartbeatIntervalRef.current);
+      }
       audio.pause();
       audio.src = "";
       if (audioContextRef.current) {
