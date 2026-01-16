@@ -57,7 +57,7 @@ const Index = () => {
               rel="noopener noreferrer"
               className="absolute left-4 md:left-[-50px] flex flex-col items-center gap-1.5 text-muted-foreground/70 hover:text-primary transition-colors group"
             >
-              <Heart className="w-8 h-8 group-hover:fill-primary transition-all" />
+              <Heart className="w-8 h-8 animate-pulse group-hover:fill-primary transition-all" />
               <span className="text-sm font-bold">DONATE</span>
             </a>
             <a 
