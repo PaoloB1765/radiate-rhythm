@@ -7,7 +7,7 @@ import VUMeter from "@/components/VUMeter";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useNowPlaying } from "@/hooks/useNowPlaying";
 import { useMediaSession } from "@/hooks/useMediaSession";
-import { Radio, Facebook } from "lucide-react";
+import { Radio, Facebook, Heart } from "lucide-react";
 
 const Index = () => {
   const { isPlaying, isLoading, volume, isMuted, analyser, togglePlay, setVolume, toggleMute } = useAudioPlayer();
@@ -51,6 +51,15 @@ const Index = () => {
         {/* Logo and header */}
         <header className="flex flex-col items-center gap-4">
           <div className="relative flex items-center justify-center w-full">
+            <a
+              href="https://www.produzionidalbasso.com/project/viva-radio-star/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute left-4 md:left-[-40px] flex flex-col items-center gap-1 text-muted-foreground/70 hover:text-primary transition-colors group"
+            >
+              <Heart className="w-6 h-6 group-hover:fill-primary transition-all" />
+              <span className="text-xs font-semibold">DONATE</span>
+            </a>
             <a 
               href="https://www.vivaradiostar.it" 
               target="_blank" 
