@@ -55,10 +55,10 @@ const Index = () => {
               href="https://www.produzionidalbasso.com/project/viva-radio-star/"
               target="_blank"
               rel="noopener noreferrer"
-              className="absolute left-4 md:left-[-40px] flex flex-col items-center gap-1 text-muted-foreground/70 hover:text-primary transition-colors group"
+              className="absolute left-4 md:left-[-50px] flex flex-col items-center gap-1 text-muted-foreground/70 hover:text-primary transition-colors group"
             >
-              <Heart className="w-6 h-6 group-hover:fill-primary transition-all" />
-              <span className="text-xs font-semibold">DONATE</span>
+              <Heart className="w-8 h-8 group-hover:fill-primary transition-all" />
+              <span className="text-sm font-semibold">DONATE</span>
             </a>
             <a 
               href="https://www.vivaradiostar.it" 
@@ -68,7 +68,7 @@ const Index = () => {
               <img 
                 src={vrsLogo} 
                 alt="Viva RadioStar Logo" 
-                className={`w-40 h-40 md:w-52 md:h-52 object-contain hover:scale-105 transition-transform ${isPlaying ? 'animate-float' : ''}`}
+                className={`w-48 h-48 md:w-60 md:h-60 object-contain hover:scale-105 transition-transform ${isPlaying ? 'animate-float' : ''}`}
               />
             </a>
             <a
