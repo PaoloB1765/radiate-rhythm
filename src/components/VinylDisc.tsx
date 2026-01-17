@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,7 +16,18 @@ interface VinylDiscProps {
 
 const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }: VinylDiscProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isPageVisible, setIsPageVisible] = useState(true);
   const progress = duration > 0 ? (elapsed / duration) * 100 : 0;
+
+  // Pause CSS animations when page is hidden (battery optimization)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsPageVisible(document.visibilityState === 'visible');
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
   
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -27,8 +38,11 @@ const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }
   return (
     <>
       <div className={cn("relative", className)}>
-        {/* Outer glow */}
-        <div className="absolute inset-0 rounded-full bg-primary/20 blur-3xl animate-pulse-glow" />
+        {/* Outer glow - pause when page hidden for battery */}
+        <div className={cn(
+          "absolute inset-0 rounded-full bg-primary/20 blur-3xl",
+          isPageVisible ? "animate-pulse-glow" : ""
+        )} />
         
         {/* Vinyl disc */}
         <div
@@ -36,9 +50,12 @@ const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }
             "relative w-64 h-64 md:w-80 md:h-80 rounded-full",
             "bg-vinyl-dark shadow-2xl",
             "transition-all duration-500",
-            isPlaying ? "animate-spin-slow" : ""
+            // Pause animation when page is hidden (battery optimization)
+            isPlaying && isPageVisible ? "animate-spin-slow" : ""
           )}
           style={{
+            // GPU acceleration hint for smoother animation
+            willChange: isPlaying && isPageVisible ? 'transform' : 'auto',
             background: `
               radial-gradient(circle at center,
                 transparent 0%,
