@@ -107,7 +107,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       }
     };
 
-    // Heartbeat: controlla ogni 30 secondi se l'audio è ancora attivo
+    // Heartbeat: controlla ogni 60 secondi se l'audio è ancora attivo (aumentato da 30s per risparmio batteria)
     const startHeartbeat = () => {
       if (heartbeatIntervalRef.current) {
         clearInterval(heartbeatIntervalRef.current);
@@ -140,7 +140,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
         if (audioContextRef.current?.state === 'suspended') {
           audioContextRef.current.resume().catch(console.error);
         }
-      }, 30000); // Ogni 30 secondi
+      }, 60000); // Ogni 60 secondi (aumentato da 30s per risparmio batteria)
     };
 
     startHeartbeat();

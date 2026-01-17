@@ -8,6 +8,8 @@ interface VUMeterProps {
 
 const LED_COUNT = 20;
 const DECAY_RATE = 0.88;
+const TARGET_FPS = 20; // Ridotto da 60fps a 20fps per risparmio batteria
+const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 const VUMeter = ({ analyser, isPlaying }: VUMeterProps) => {
   const [level, setLevel] = useState(0);
@@ -15,6 +17,18 @@ const VUMeter = ({ analyser, isPlaying }: VUMeterProps) => {
   const animationRef = useRef<number>();
   const peakHold = useRef(0);
   const peakDecay = useRef(0);
+  const lastFrameTime = useRef(0);
+  const isVisible = useRef(true);
+
+  // Pause animation when page is hidden (battery optimization)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      isVisible.current = document.visibilityState === 'visible';
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
 
   useEffect(() => {
     if (!analyser || !isPlaying) {
@@ -26,7 +40,21 @@ const VUMeter = ({ analyser, isPlaying }: VUMeterProps) => {
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
 
-    const updateLevels = () => {
+    const updateLevels = (timestamp: number) => {
+      // Skip frames when page is not visible (battery optimization)
+      if (!isVisible.current) {
+        animationRef.current = requestAnimationFrame(updateLevels);
+        return;
+      }
+
+      // Throttle to target FPS (battery optimization)
+      const elapsed = timestamp - lastFrameTime.current;
+      if (elapsed < FRAME_INTERVAL) {
+        animationRef.current = requestAnimationFrame(updateLevels);
+        return;
+      }
+      lastFrameTime.current = timestamp;
+
       analyser.getByteFrequencyData(dataArray);
 
       let sum = 0;
@@ -43,7 +71,7 @@ const VUMeter = ({ analyser, isPlaying }: VUMeterProps) => {
       // Peak hold logic
       if (scaled > peakDecay.current) {
         peakDecay.current = scaled;
-        peakHold.current = 30;
+        peakHold.current = 15; // Ridotto da 30 per compensare FPS più basso
       } else if (peakHold.current > 0) {
         peakHold.current--;
       } else {
