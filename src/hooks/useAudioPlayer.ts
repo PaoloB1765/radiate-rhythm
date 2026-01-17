@@ -27,6 +27,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
   const reconnectAttempts = useRef(0);
   const maxReconnectAttempts = 5;
   const isPlayingRef = useRef(false);
+  const shouldPlayRef = useRef(false); // user intent: should we be playing?
   const isIntentionalStop = useRef(false);
   const heartbeatIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const lastPlaybackTime = useRef<number>(0);
@@ -40,16 +41,16 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     const audio = new Audio();
     audio.preload = "auto";
     audio.crossOrigin = "anonymous";
-    
+
     // Ottimizzazioni per la riproduzione in background su mobile
-    audio.setAttribute('playsinline', 'true');
-    audio.setAttribute('webkit-playsinline', 'true');
-    
+    audio.setAttribute("playsinline", "true");
+    audio.setAttribute("webkit-playsinline", "true");
+
     // Disabilita il buffering aggressivo per ridurre gli skip
-    if ('mozPreservesPitch' in audio) {
+    if ("mozPreservesPitch" in audio) {
       (audio as any).mozPreservesPitch = false;
     }
-    
+
     audioRef.current = audio;
 
     const handleCanPlay = () => {
@@ -64,10 +65,36 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     const handlePlaying = () => {
       setIsLoading(false);
       setIsPlaying(true);
+      shouldPlayRef.current = true;
       reconnectAttempts.current = 0;
     };
 
     const handlePause = () => {
+      // Stop richiesto dall'utente
+      if (isIntentionalStop.current) {
+        isIntentionalStop.current = false;
+        shouldPlayRef.current = false;
+        setIsLoading(false);
+        setIsPlaying(false);
+        return;
+      }
+
+      // Pausa inaspettata: su mobile può succedere dopo un po' (risparmio energetico / rete)
+      if (shouldPlayRef.current) {
+        console.log("Audio paused unexpectedly, attempting recovery...");
+        setIsLoading(true);
+        audio.src = STREAM_URL + "?t=" + Date.now();
+        audio.load();
+        audio
+          .play()
+          .catch((err) => {
+            console.error("Recovery play failed:", err);
+            setIsLoading(false);
+            setIsPlaying(false);
+          });
+        return;
+      }
+
       setIsPlaying(false);
     };
 
@@ -75,19 +102,21 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       console.error("Audio error:", e);
       setIsLoading(false);
       setIsPlaying(false);
-      
+
       // Don't reconnect if this was an intentional stop
       if (isIntentionalStop.current) {
         isIntentionalStop.current = false;
         return;
       }
-      
+
       // Tenta di riconnettersi automaticamente in caso di errore
       if (reconnectAttempts.current < maxReconnectAttempts) {
         reconnectAttempts.current++;
-        console.log(`Tentativo di riconnessione ${reconnectAttempts.current}/${maxReconnectAttempts}`);
+        console.log(
+          `Tentativo di riconnessione ${reconnectAttempts.current}/${maxReconnectAttempts}`
+        );
         setTimeout(() => {
-          if (audioRef.current && isPlayingRef.current) {
+          if (audioRef.current && shouldPlayRef.current) {
             audioRef.current.src = STREAM_URL + "?t=" + Date.now();
             audioRef.current.load();
             audioRef.current.play().catch(console.error);
@@ -99,7 +128,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     // Gestione stallo audio (comune quando lo schermo si spegne)
     const handleStalled = () => {
       console.log("Audio stalled, attempting recovery...");
-      if (audio && isPlayingRef.current && !isIntentionalStop.current) {
+      if (audio && shouldPlayRef.current && !isIntentionalStop.current) {
         // Forza un refresh dello stream
         audio.src = STREAM_URL + "?t=" + Date.now();
         audio.load();
@@ -107,25 +136,25 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       }
     };
 
-    // Heartbeat: controlla ogni 60 secondi se l'audio è ancora attivo (aumentato da 30s per risparmio batteria)
+    // Heartbeat: controlla ogni 60 secondi se l'audio è ancora attivo
     const startHeartbeat = () => {
       if (heartbeatIntervalRef.current) {
         clearInterval(heartbeatIntervalRef.current);
       }
-      
+
       heartbeatIntervalRef.current = setInterval(() => {
-        if (!isPlayingRef.current || isIntentionalStop.current) return;
-        
+        if (!shouldPlayRef.current || isIntentionalStop.current) return;
+
         const currentTime = audio.currentTime;
-        
-        // Se l'audio dovrebbe suonare ma currentTime non cambia o è in pausa
-        if (audio.paused && isPlayingRef.current && !isIntentionalStop.current) {
+
+        // Se l'audio dovrebbe suonare ma è in pausa
+        if (audio.paused && shouldPlayRef.current && !isIntentionalStop.current) {
           console.log("Heartbeat: Audio paused unexpectedly, restarting...");
           audio.src = STREAM_URL + "?t=" + Date.now();
           audio.load();
           audio.play().catch(console.error);
         }
-        
+
         // Se currentTime non cambia per 2 cicli consecutivi (potrebbe essere bloccato)
         if (lastPlaybackTime.current === currentTime && !audio.paused && currentTime > 0) {
           console.log("Heartbeat: Audio stuck, attempting recovery...");
@@ -133,14 +162,14 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
           audio.load();
           audio.play().catch(console.error);
         }
-        
+
         lastPlaybackTime.current = currentTime;
-        
+
         // Mantieni l'AudioContext attivo
-        if (audioContextRef.current?.state === 'suspended') {
+        if (audioContextRef.current?.state === "suspended") {
           audioContextRef.current.resume().catch(console.error);
         }
-      }, 60000); // Ogni 60 secondi (aumentato da 30s per risparmio batteria)
+      }, 60000);
     };
 
     startHeartbeat();
@@ -154,17 +183,17 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
 
     // Gestione visibilità pagina per riprendere l'audio
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && audioContextRef.current?.state === 'suspended') {
+      if (document.visibilityState === "visible" && audioContextRef.current?.state === "suspended") {
         audioContextRef.current.resume();
       }
-      
+
       // Se l'app torna visibile e l'audio dovrebbe essere in riproduzione
-      if (document.visibilityState === 'visible' && isPlayingRef.current && audio.paused) {
+      if (document.visibilityState === "visible" && shouldPlayRef.current && audio.paused) {
         audio.play().catch(console.error);
       }
     };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       audio.removeEventListener("canplay", handleCanPlay);
@@ -173,7 +202,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       audio.removeEventListener("pause", handlePause);
       audio.removeEventListener("error", handleError);
       audio.removeEventListener("stalled", handleStalled);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       if (heartbeatIntervalRef.current) {
         clearInterval(heartbeatIntervalRef.current);
       }
@@ -200,9 +229,9 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       setIsLoading(true);
       audio.src = STREAM_URL;
       audio.load();
-      
+
       setupAudioAnalyser();
-      
+
       audio.play().catch((error) => {
         console.warn("Autoplay blocked by browser:", error);
         setIsLoading(false);
@@ -222,7 +251,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     if (!audioContextRef.current) {
       audioContextRef.current = new AudioContext({
         // Latenza bassa per ridurre gli skip
-        latencyHint: 'playback'
+        latencyHint: "playback",
       });
     }
 
@@ -238,10 +267,10 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
       analyserRef.current = ctx.createAnalyser();
       analyserRef.current.fftSize = 256;
       analyserRef.current.smoothingTimeConstant = 0.8;
-      
+
       sourceRef.current.connect(analyserRef.current);
       analyserRef.current.connect(ctx.destination);
-      
+
       setAnalyser(analyserRef.current);
     }
 
@@ -256,20 +285,24 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     if (!audio) return;
 
     if (isPlaying) {
+      shouldPlayRef.current = false;
       isIntentionalStop.current = true;
       audio.pause();
       audio.src = "";
     } else {
       setIsLoading(true);
       reconnectAttempts.current = 0;
+      shouldPlayRef.current = true;
+
       audio.src = STREAM_URL;
       audio.load();
-      
+
       // Setup audio analyser before playing
       setupAudioAnalyser();
-      
+
       audio.play().catch((error) => {
         console.error("Playback failed:", error);
+        shouldPlayRef.current = false;
         setIsLoading(false);
       });
     }
