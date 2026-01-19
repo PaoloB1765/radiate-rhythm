@@ -1,4 +1,4 @@
-import { Music2, ChevronDown, Clock, ExternalLink } from "lucide-react";
+import { Music2, ChevronDown, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -60,15 +60,6 @@ const NowPlaying = ({ artist, title, album, isPlaying, nextArtist, nextTitle, ne
               <span>Album: </span><span className="italic">{album}</span>
             </p>
           )}
-          <a 
-            href="https://ai.studio/apps/drive/1s2fKJJcl4RBrnrUcr-VPEO8-xacGPK3J" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 mt-2 text-xs text-accent hover:text-accent/80 transition-colors uppercase tracking-wider font-semibold"
-          >
-            <ExternalLink className="w-3 h-3" />
-            More Info
-          </a>
         </div>
       ) : (
         <div className="flex items-center gap-3 text-muted-foreground">
