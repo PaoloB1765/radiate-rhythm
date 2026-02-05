@@ -80,8 +80,23 @@ const Index = () => {
               <Facebook className="w-8 h-8" />
             </a>
           </div>
-          <p className="text-muted-foreground text-sm flex items-center justify-center gap-2">
-            <Radio className="w-4 h-4" />
+          <p 
+            className={`text-sm flex items-center justify-center gap-2 transition-all duration-500 ${
+              isPlaying 
+                ? 'text-primary animate-pulse-glow' 
+                : 'text-muted-foreground'
+            }`}
+            style={isPlaying ? { 
+              textShadow: '0 0 10px hsl(var(--primary)), 0 0 20px hsl(var(--primary)), 0 0 30px hsl(var(--primary))',
+              filter: 'drop-shadow(0 0 8px hsl(var(--primary) / 0.6))'
+            } : {}}
+          >
+            <Radio 
+              className={`w-4 h-4 transition-all duration-500 ${isPlaying ? 'text-primary' : ''}`}
+              style={isPlaying ? { 
+                filter: 'drop-shadow(0 0 6px hsl(var(--primary)))'
+              } : {}}
+            />
             <span>La radio che ti porta negli anni d'oro della Musica</span>
           </p>
           <p className="text-muted-foreground/70 text-xs">
