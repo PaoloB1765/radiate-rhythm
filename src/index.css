@@ -165,7 +165,12 @@
       text-shadow: 0 0 10px hsl(0 72% 51%), 0 0 20px hsl(0 72% 51%), 0 0 30px hsl(0 72% 51%);
       filter: drop-shadow(0 0 8px hsl(0 72% 51% / 0.6));
     }
-    50% {
+    33% {
+      color: hsl(0 0% 100%);
+      text-shadow: 0 0 10px hsl(0 0% 100%), 0 0 20px hsl(0 0% 100%), 0 0 30px hsl(0 0% 100%);
+      filter: drop-shadow(0 0 8px hsl(0 0% 100% / 0.6));
+    }
+    66% {
       color: hsl(221 83% 53%);
       text-shadow: 0 0 10px hsl(221 83% 53%), 0 0 20px hsl(221 83% 53%), 0 0 30px hsl(221 83% 53%);
       filter: drop-shadow(0 0 8px hsl(221 83% 53% / 0.6));
