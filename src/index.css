@@ -178,6 +178,6 @@
   }
 
   .animate-neon-shift {
-    animation: neon-shift 3s ease-in-out infinite;
+    animation: neon-shift 5s ease-in-out infinite;
   }
 }
