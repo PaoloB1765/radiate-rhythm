@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useRef } from "react";
 
 interface MediaSessionOptions {
   title: string;
@@ -10,6 +10,49 @@ interface MediaSessionOptions {
   onPause?: () => void;
 }
 
+/**
+ * Pre-fetches an image and converts it to a blob URL.
+ * This is necessary for WebView-based apps (Median, Capacitor)
+ * where Media Session API can't load external image URLs
+ * (e.g. CarPlay, Android Auto, lock screen).
+ */
+const fetchImageAsBlob = async (url: string): Promise<string | null> => {
+  try {
+    const response = await fetch(url, { mode: "cors" });
+    if (!response.ok) throw new Error("Failed to fetch image");
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    // Fallback: try via canvas for CORS-restricted images
+    try {
+      return await new Promise<string | null>((resolve) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) { resolve(null); return; }
+          ctx.drawImage(img, 0, 0);
+          canvas.toBlob((blob) => {
+            if (blob) {
+              resolve(URL.createObjectURL(blob));
+            } else {
+              resolve(null);
+            }
+          }, "image/jpeg", 0.9);
+        };
+        img.onerror = () => resolve(null);
+        img.src = url;
+      });
+    } catch {
+      console.warn("Could not convert cover art to blob URL");
+      return null;
+    }
+  }
+};
+
 export const useMediaSession = ({
   title,
   artist,
@@ -19,21 +62,46 @@ export const useMediaSession = ({
   onPlay,
   onPause,
 }: MediaSessionOptions) => {
-  
-  const updateMetadata = useCallback(() => {
+  const blobUrlRef = useRef<string | null>(null);
+  const lastCoverArtRef = useRef<string>("");
+
+  // Clean up blob URL on unmount
+  useEffect(() => {
+    return () => {
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current);
+      }
+    };
+  }, []);
+
+  const updateMetadata = useCallback(async () => {
     if (!("mediaSession" in navigator)) return;
 
     const artwork: MediaImage[] = [];
-    
+
     if (coverArt) {
-      // Add cover art in multiple sizes for different devices
+      // Convert to blob URL if the cover art changed
+      if (coverArt !== lastCoverArtRef.current) {
+        // Revoke previous blob URL
+        if (blobUrlRef.current) {
+          URL.revokeObjectURL(blobUrlRef.current);
+          blobUrlRef.current = null;
+        }
+        lastCoverArtRef.current = coverArt;
+        const blobUrl = await fetchImageAsBlob(coverArt);
+        blobUrlRef.current = blobUrl;
+      }
+
+      const artUrl = blobUrlRef.current || coverArt;
+      const artType = blobUrlRef.current ? "image/jpeg" : "image/jpeg";
+
       artwork.push(
-        { src: coverArt, sizes: "96x96", type: "image/jpeg" },
-        { src: coverArt, sizes: "128x128", type: "image/jpeg" },
-        { src: coverArt, sizes: "192x192", type: "image/jpeg" },
-        { src: coverArt, sizes: "256x256", type: "image/jpeg" },
-        { src: coverArt, sizes: "384x384", type: "image/jpeg" },
-        { src: coverArt, sizes: "512x512", type: "image/jpeg" }
+        { src: artUrl, sizes: "96x96", type: artType },
+        { src: artUrl, sizes: "128x128", type: artType },
+        { src: artUrl, sizes: "192x192", type: artType },
+        { src: artUrl, sizes: "256x256", type: artType },
+        { src: artUrl, sizes: "384x384", type: artType },
+        { src: artUrl, sizes: "512x512", type: artType }
       );
     }
 
@@ -48,7 +116,6 @@ export const useMediaSession = ({
   // Update playback state
   useEffect(() => {
     if (!("mediaSession" in navigator)) return;
-
     navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
   }, [isPlaying]);
 
