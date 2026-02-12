@@ -109,7 +109,6 @@
     @apply rounded-2xl border border-border/50;
     background: var(--gradient-card);
     box-shadow: var(--shadow-card);
-    backdrop-filter: blur(10px);
   }
 
   .glow-red {
@@ -162,22 +161,30 @@
   @keyframes neon-shift {
     0%, 100% {
       color: hsl(0 72% 51%);
-      text-shadow: 0 0 10px hsl(0 72% 51%), 0 0 20px hsl(0 72% 51%), 0 0 30px hsl(0 72% 51%);
-      filter: drop-shadow(0 0 8px hsl(0 72% 51% / 0.6));
+      text-shadow: 0 0 8px hsl(0 72% 51% / 0.7);
     }
     33% {
       color: hsl(0 0% 100%);
-      text-shadow: 0 0 10px hsl(0 0% 100%), 0 0 20px hsl(0 0% 100%), 0 0 30px hsl(0 0% 100%);
-      filter: drop-shadow(0 0 8px hsl(0 0% 100% / 0.6));
+      text-shadow: 0 0 8px hsl(0 0% 100% / 0.7);
     }
     66% {
       color: hsl(221 83% 53%);
-      text-shadow: 0 0 10px hsl(221 83% 53%), 0 0 20px hsl(221 83% 53%), 0 0 30px hsl(221 83% 53%);
-      filter: drop-shadow(0 0 8px hsl(221 83% 53% / 0.6));
+      text-shadow: 0 0 8px hsl(221 83% 53% / 0.7);
     }
   }
 
   .animate-neon-shift {
     animation: neon-shift 5s ease-in-out infinite;
+  }
+}
+
+/* Disable heavy animations for low-power devices */
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin-slow,
+  .animate-pulse-glow,
+  .animate-float,
+  .animate-neon-shift,
+  .animate-pulse {
+    animation: none !important;
   }
 }

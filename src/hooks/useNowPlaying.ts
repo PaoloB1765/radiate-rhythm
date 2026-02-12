@@ -91,31 +91,40 @@ export const useNowPlaying = (isPlaying: boolean) => {
     }
   }, []);
 
-  // Update elapsed time every second
+  // Update elapsed time every second - pause when page not visible
   useEffect(() => {
     if (!isPlaying || durationRef.current === 0) return;
     
-    const interval = setInterval(() => {
-      const now = Math.floor(Date.now() / 1000);
-      const newElapsed = now - playedAtRef.current;
-      if (newElapsed <= durationRef.current) {
-        setCurrentElapsed(newElapsed);
-      }
-    }, 1000);
+    let interval: ReturnType<typeof setInterval> | null = null;
     
-    return () => clearInterval(interval);
+    const start = () => {
+      interval = setInterval(() => {
+        if (document.visibilityState !== 'visible') return;
+        const now = Math.floor(Date.now() / 1000);
+        const newElapsed = now - playedAtRef.current;
+        if (newElapsed <= durationRef.current) {
+          setCurrentElapsed(newElapsed);
+        }
+      }, 1000);
+    };
+    
+    start();
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [isPlaying, nowPlaying.playedAt]);
 
   useEffect(() => {
     // Fetch immediately
     fetchNowPlaying();
 
-    // Poll every 20 seconds when playing
+    // Poll every 30 seconds when playing (was 20s)
     const interval = setInterval(() => {
-      if (isPlaying) {
+      if (isPlaying && document.visibilityState === 'visible') {
         fetchNowPlaying();
       }
-    }, 20000);
+    }, 30000);
 
     return () => clearInterval(interval);
   }, [isPlaying, fetchNowPlaying]);

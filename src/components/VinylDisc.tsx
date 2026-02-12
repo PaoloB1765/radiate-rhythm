@@ -38,10 +38,10 @@ const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }
   return (
     <>
       <div className={cn("relative", className)}>
-        {/* Outer glow - pause when page hidden for battery */}
+        {/* Outer glow - simplified for performance */}
         <div className={cn(
-          "absolute inset-0 rounded-full bg-primary/20 blur-3xl",
-          isPageVisible ? "animate-pulse-glow" : ""
+          "absolute inset-0 rounded-full bg-primary/15 blur-xl",
+          isPlaying && isPageVisible ? "animate-pulse-glow" : ""
         )} />
         
         {/* Vinyl disc */}
@@ -54,8 +54,6 @@ const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }
             isPlaying && isPageVisible ? "animate-spin-slow" : ""
           )}
           style={{
-            // GPU acceleration hint for smoother animation
-            willChange: isPlaying && isPageVisible ? 'transform' : 'auto',
             background: `
               radial-gradient(circle at center,
                 transparent 0%,
@@ -91,13 +89,7 @@ const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }
             `,
           }}
         >
-          {/* Light reflection */}
-          <div 
-            className="absolute inset-0 rounded-full opacity-30"
-            style={{
-              background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%)'
-            }}
-          />
+          {/* Light reflection removed for performance */}
           
           {/* Center label with cover art - clickable */}
           <div className="absolute inset-0 flex items-center justify-center">

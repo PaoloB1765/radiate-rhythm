@@ -41,10 +41,10 @@ const Index = () => {
         }}
       />
       
-      {/* Decorative elements */}
-      <div className={`absolute top-10 left-10 w-40 h-40 rounded-full bg-secondary/20 blur-3xl transition-all duration-700 ${isPlaying ? 'opacity-100 scale-150' : 'opacity-50 scale-100'}`} />
-      <div className={`absolute bottom-20 right-10 w-48 h-48 rounded-full bg-primary/20 blur-3xl transition-all duration-700 ${isPlaying ? 'opacity-100 scale-150' : 'opacity-40 scale-100'}`} />
-      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-primary/15 blur-[100px] transition-all duration-700 ${isPlaying ? 'opacity-100 scale-125' : 'opacity-0 scale-100'}`} />
+      {/* Decorative elements - optimized: reduced blur and removed scale transforms */}
+      <div className={`absolute top-10 left-10 w-40 h-40 rounded-full bg-secondary/15 blur-xl transition-opacity duration-700 ${isPlaying ? 'opacity-80' : 'opacity-30'}`} />
+      <div className={`absolute bottom-20 right-10 w-48 h-48 rounded-full bg-primary/15 blur-xl transition-opacity duration-700 ${isPlaying ? 'opacity-80' : 'opacity-30'}`} />
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-primary/10 blur-2xl transition-opacity duration-700 ${isPlaying ? 'opacity-70' : 'opacity-0'}`} />
 
       {/* Main content */}
       <main className="flex flex-col items-center gap-8 md:gap-10 w-full max-w-lg">
@@ -68,7 +68,7 @@ const Index = () => {
               <img 
                 src={vrsLogo} 
                 alt="Viva RadioStar Logo" 
-                className={`w-40 h-40 md:w-52 md:h-52 object-contain hover:scale-105 transition-transform ${isPlaying ? 'animate-float' : ''}`}
+                className="w-40 h-40 md:w-52 md:h-52 object-contain hover:scale-105 transition-transform"
               />
             </a>
             <a
