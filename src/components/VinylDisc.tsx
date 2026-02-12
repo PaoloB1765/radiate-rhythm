@@ -89,7 +89,13 @@ const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }
             `,
           }}
         >
-          {/* Light reflection removed for performance */}
+          {/* Light reflection */}
+          <div 
+            className="absolute inset-0 rounded-full opacity-30 pointer-events-none"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(255,255,255,0.05) 100%)'
+            }}
+          />
           
           {/* Center label with cover art - clickable */}
           <div className="absolute inset-0 flex items-center justify-center">
