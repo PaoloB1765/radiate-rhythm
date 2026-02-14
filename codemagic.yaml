@@ -4,7 +4,7 @@ workflows:
     environment:
       ios_signing:
         distribution_type: app_store # o ad_hoc / development
-        bundle_identifier: 6759046107
+        bundle_identifier: co.median.ios.mbbllne
     scripts:
       - name: Build IPA
         script: |
