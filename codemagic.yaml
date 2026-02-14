@@ -1,0 +1,16 @@
+workflows:
+  ios-workflow:
+    name: iOS Build
+    environment:
+      ios_signing:
+        distribution_type: app_store # o ad_hoc / development
+        bundle_identifier: com.tuo.app
+    scripts:
+      - name: Build IPA
+        script: |
+          # Per Flutter:
+          flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
+          # Per iOS Nativo:
+          xcode-project build-ipa --workspace "TuoProgetto.xcworkspace" --scheme "TuoScheme"
+    artifacts:
+      - build/ios/ipa/*.ipa
