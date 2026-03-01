@@ -4,14 +4,17 @@ import PlayButton from "@/components/PlayButton";
 import VolumeControl from "@/components/VolumeControl";
 import NowPlaying from "@/components/NowPlaying";
 import VUMeter from "@/components/VUMeter";
+import CastButton from "@/components/CastButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useNowPlaying } from "@/hooks/useNowPlaying";
 import { useMediaSession } from "@/hooks/useMediaSession";
+import { useChromecast } from "@/hooks/useChromecast";
 import { Radio, Facebook, Heart } from "lucide-react";
 
 const Index = () => {
   const { isPlaying, isLoading, volume, isMuted, analyser, togglePlay, setVolume, toggleMute } = useAudioPlayer();
   const nowPlaying = useNowPlaying(isPlaying);
+  const { isCasting, isAvailable, deviceName, startCasting, stopCasting } = useChromecast(nowPlaying);
 
   // Media Session API for lock screen controls and artwork
   useMediaSession({
@@ -103,12 +106,19 @@ const Index = () => {
           elapsed={nowPlaying.elapsed}
         />
 
-        {/* Play button */}
-        <div className="mt-4">
+        {/* Play button and Cast */}
+        <div className="mt-4 flex items-center gap-6">
           <PlayButton 
             isPlaying={isPlaying} 
             isLoading={isLoading} 
             onClick={togglePlay}
+          />
+          <CastButton
+            isAvailable={isAvailable}
+            isCasting={isCasting}
+            deviceName={deviceName}
+            onCast={startCasting}
+            onStop={stopCasting}
           />
         </div>
 
