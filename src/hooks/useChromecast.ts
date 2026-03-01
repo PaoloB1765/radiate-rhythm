@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 const STREAM_URL = "https://vrs-blackbox.ddns.net/listen/vrs/radio.mp3";
-const VRS_LOGO = "https://vivaradiostar.lovable.app/app-icon.png";
+const VRS_LOGO = "https://vivaradiostar.lovable.app/cast-logo.jpg";
 
 interface UseChromecastReturn {
   isCasting: boolean;
