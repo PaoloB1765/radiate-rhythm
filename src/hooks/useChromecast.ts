@@ -97,11 +97,40 @@ export const useChromecast = (
     [nowPlaying.artist, nowPlaying.title, nowPlaying.coverArt]
   );
 
-  // Update metadata on Cast device when song changes
+  // Update metadata on Cast device when song changes (without reloading stream)
   useEffect(() => {
     if (!isCasting || !sessionRef.current) return;
-    loadMedia(sessionRef.current);
-  }, [nowPlaying.title, nowPlaying.artist, isCasting, loadMedia]);
+    const session = sessionRef.current;
+    const mediaSession = session.getMediaSession?.();
+    if (!mediaSession) {
+      // No active media session yet, do a full load
+      loadMedia(session);
+      return;
+    }
+
+    const chromeCast = getChrome()?.cast;
+    if (!chromeCast) return;
+
+    const mediaInfo = mediaSession.media;
+    if (!mediaInfo) return;
+
+    const metadata = new chromeCast.media.MusicTrackMediaMetadata();
+    metadata.title = nowPlaying.title || "Viva RadioStar";
+    metadata.artist = nowPlaying.artist || "In onda";
+    metadata.albumName = "Viva RadioStar";
+    metadata.images = [new chromeCast.Image(nowPlaying.coverArt || VRS_LOGO)];
+
+    mediaInfo.metadata = metadata;
+
+    const editRequest = new chromeCast.media.EditTracksInfoRequest();
+    mediaSession.editTracksInfo(editRequest,
+      () => console.log("Cast: Metadata updated"),
+      (error: any) => {
+        console.warn("Cast: editTracksInfo failed, trying full reload", error);
+        loadMedia(session);
+      }
+    );
+  }, [nowPlaying.title, nowPlaying.artist, nowPlaying.coverArt, isCasting, loadMedia]);
 
   const startCasting = useCallback(() => {
     const castFw = getCast()?.framework;
