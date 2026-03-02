@@ -23,6 +23,16 @@ export const useChromecast = (
   const sessionRef = useRef<any>(null);
 
   useEffect(() => {
+    // Detect WebView environments (Capacitor, Median) where Cast SDK won't work
+    const ua = navigator.userAgent || "";
+    const isWebView =
+      /wv|WebView/i.test(ua) ||
+      /; wv\)/.test(ua) ||
+      !!(window as any).Capacitor ||
+      !!(window as any).median ||
+      !!(window as any).gonative;
+    if (isWebView) return;
+
     const initCast = () => {
       const castFw = getCast()?.framework;
       const chromeCast = getChrome()?.cast;
