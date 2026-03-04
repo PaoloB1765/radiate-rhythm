@@ -21,6 +21,7 @@ export const useChromecast = (
   const [isAvailable, setIsAvailable] = useState(false);
   const [deviceName, setDeviceName] = useState("");
   const sessionRef = useRef<any>(null);
+  const lastMetadataKeyRef = useRef("");
 
   useEffect(() => {
     // Detect WebView environments (Capacitor, Median) where Cast SDK won't work
@@ -107,39 +108,17 @@ export const useChromecast = (
     [nowPlaying.artist, nowPlaying.title, nowPlaying.coverArt]
   );
 
-  // Update metadata on Cast device when song changes (without reloading stream)
+  // Default Media Receiver non supporta update dinamici affidabili dei metadati live:
+  // ricarichiamo il media SOLO quando il brano cambia.
   useEffect(() => {
     if (!isCasting || !sessionRef.current) return;
-    const session = sessionRef.current;
-    const mediaSession = session.getMediaSession?.();
-    if (!mediaSession) {
-      // No active media session yet, do a full load
-      loadMedia(session);
-      return;
-    }
 
-    const chromeCast = getChrome()?.cast;
-    if (!chromeCast) return;
+    const metadataKey = `${nowPlaying.title || "Viva RadioStar"}|${nowPlaying.artist || "In onda"}|${nowPlaying.coverArt || VRS_LOGO}`;
 
-    const mediaInfo = mediaSession.media;
-    if (!mediaInfo) return;
+    if (metadataKey === lastMetadataKeyRef.current) return;
 
-    const metadata = new chromeCast.media.MusicTrackMediaMetadata();
-    metadata.title = nowPlaying.title || "Viva RadioStar";
-    metadata.artist = nowPlaying.artist || "In onda";
-    metadata.albumName = "Viva RadioStar";
-    metadata.images = [new chromeCast.Image(nowPlaying.coverArt || VRS_LOGO)];
-
-    mediaInfo.metadata = metadata;
-
-    const editRequest = new chromeCast.media.EditTracksInfoRequest();
-    mediaSession.editTracksInfo(editRequest,
-      () => console.log("Cast: Metadata updated"),
-      (error: any) => {
-        console.warn("Cast: editTracksInfo failed, trying full reload", error);
-        loadMedia(session);
-      }
-    );
+    lastMetadataKeyRef.current = metadataKey;
+    loadMedia(sessionRef.current);
   }, [nowPlaying.title, nowPlaying.artist, nowPlaying.coverArt, isCasting, loadMedia]);
 
   const startCasting = useCallback(() => {
