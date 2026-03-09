@@ -327,6 +327,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
     volume,
     isMuted,
     analyser,
+    audioElement: audioRef.current,
     togglePlay,
     setVolume,
     toggleMute,

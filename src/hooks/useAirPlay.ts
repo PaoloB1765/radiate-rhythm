@@ -52,18 +52,19 @@ export const useAirPlay = (
     // Legacy WebKit AirPlay (older Safari)
     setIsAvailable(true);
 
+    const el = audioElement as HTMLAudioElement;
     const handleTargetChange = () => {
-      const playing = (audioElement as any).webkitCurrentPlaybackTargetIsWireless;
+      const playing = (el as any).webkitCurrentPlaybackTargetIsWireless;
       setIsActive(!!playing);
     };
 
-    audioElement.addEventListener(
+    el.addEventListener(
       "webkitcurrentplaybacktargetiswirelesschanged" as any,
       handleTargetChange
     );
 
     return () => {
-      audioElement.removeEventListener(
+      el.removeEventListener(
         "webkitcurrentplaybacktargetiswirelesschanged" as any,
         handleTargetChange
       );
