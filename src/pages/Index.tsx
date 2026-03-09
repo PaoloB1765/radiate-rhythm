@@ -5,6 +5,7 @@ import VolumeControl from "@/components/VolumeControl";
 import NowPlaying from "@/components/NowPlaying";
 import VUMeter from "@/components/VUMeter";
 import CastButton from "@/components/CastButton";
+import AirPlayButton from "@/components/AirPlayButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useNowPlaying } from "@/hooks/useNowPlaying";
 import { useMediaSession } from "@/hooks/useMediaSession";
