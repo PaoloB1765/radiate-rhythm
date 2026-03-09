@@ -123,6 +123,11 @@ const Index = () => {
             onCast={startCasting}
             onStop={stopCasting}
           />
+          <AirPlayButton
+            isAvailable={airPlay.isAvailable}
+            isActive={airPlay.isActive}
+            onPress={airPlay.showPicker}
+          />
         </div>
 
         {/* VU Meter */}
