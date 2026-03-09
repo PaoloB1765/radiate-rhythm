@@ -22,6 +22,7 @@ export const useChromecast = (
   const [isCasting, setIsCasting] = useState(false);
   const [isAvailable, setIsAvailable] = useState(false);
   const [deviceName, setDeviceName] = useState("");
+  const [aggressiveUpdate, setAggressiveUpdate] = useState(false);
   const sessionRef = useRef<any>(null);
   const lastMetadataKeyRef = useRef("");
 
