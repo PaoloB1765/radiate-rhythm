@@ -117,6 +117,8 @@ const Index = () => {
             isAvailable={isAvailable}
             isCasting={isCasting}
             deviceName={deviceName}
+            aggressiveUpdate={aggressiveUpdate}
+            onAggressiveUpdateChange={setAggressiveUpdate}
             onCast={startCasting}
             onStop={stopCasting}
           />
