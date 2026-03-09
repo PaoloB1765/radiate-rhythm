@@ -5,16 +5,19 @@ import VolumeControl from "@/components/VolumeControl";
 import NowPlaying from "@/components/NowPlaying";
 import VUMeter from "@/components/VUMeter";
 import CastButton from "@/components/CastButton";
+import AirPlayButton from "@/components/AirPlayButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useNowPlaying } from "@/hooks/useNowPlaying";
 import { useMediaSession } from "@/hooks/useMediaSession";
 import { useChromecast } from "@/hooks/useChromecast";
+import { useAirPlay } from "@/hooks/useAirPlay";
 import { Radio, Facebook, Heart } from "lucide-react";
 
 const Index = () => {
-  const { isPlaying, isLoading, volume, isMuted, analyser, togglePlay, setVolume, toggleMute } = useAudioPlayer();
+  const { isPlaying, isLoading, volume, isMuted, analyser, audioElement, togglePlay, setVolume, toggleMute } = useAudioPlayer();
   const nowPlaying = useNowPlaying(isPlaying);
   const { isCasting, isAvailable, deviceName, startCasting, stopCasting } = useChromecast(nowPlaying);
+  const airPlay = useAirPlay(audioElement);
 
   // Media Session API for lock screen controls and artwork
   useMediaSession({
@@ -119,6 +122,11 @@ const Index = () => {
             deviceName={deviceName}
             onCast={startCasting}
             onStop={stopCasting}
+          />
+          <AirPlayButton
+            isAvailable={airPlay.isAvailable}
+            isActive={airPlay.isActive}
+            onPress={airPlay.showPicker}
           />
         </div>
 
