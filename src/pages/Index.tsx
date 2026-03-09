@@ -10,6 +10,7 @@ import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useNowPlaying } from "@/hooks/useNowPlaying";
 import { useMediaSession } from "@/hooks/useMediaSession";
 import { useChromecast } from "@/hooks/useChromecast";
+import { useAirPlay } from "@/hooks/useAirPlay";
 import { Radio, Facebook, Heart } from "lucide-react";
 
 const Index = () => {
