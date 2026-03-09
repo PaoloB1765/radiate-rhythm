@@ -146,6 +146,8 @@ export const useChromecast = (
     isCasting,
     isAvailable,
     deviceName,
+    aggressiveUpdate,
+    setAggressiveUpdate,
     startCasting,
     stopCasting,
   };
