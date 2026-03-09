@@ -124,6 +124,17 @@ export const useChromecast = (
     loadMedia(sessionRef.current);
   }, [nowPlaying.title, nowPlaying.artist, nowPlaying.coverArt, isCasting, loadMedia]);
 
+  // Aggressive update: ricarica i metadati ogni 20s indipendentemente dal cambio brano
+  useEffect(() => {
+    if (!aggressiveUpdate || !isCasting || !sessionRef.current) return;
+    const interval = setInterval(() => {
+      if (sessionRef.current) {
+        loadMedia(sessionRef.current);
+      }
+    }, 20000);
+    return () => clearInterval(interval);
+  }, [aggressiveUpdate, isCasting, loadMedia]);
+
   const startCasting = useCallback(() => {
     const castFw = getCast()?.framework;
     if (!castFw) return;
