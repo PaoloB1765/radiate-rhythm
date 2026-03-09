@@ -14,9 +14,10 @@ import { useAirPlay } from "@/hooks/useAirPlay";
 import { Radio, Facebook, Heart } from "lucide-react";
 
 const Index = () => {
-  const { isPlaying, isLoading, volume, isMuted, analyser, togglePlay, setVolume, toggleMute } = useAudioPlayer();
+  const { isPlaying, isLoading, volume, isMuted, analyser, audioElement, togglePlay, setVolume, toggleMute } = useAudioPlayer();
   const nowPlaying = useNowPlaying(isPlaying);
   const { isCasting, isAvailable, deviceName, startCasting, stopCasting } = useChromecast(nowPlaying);
+  const airPlay = useAirPlay(audioElement);
 
   // Media Session API for lock screen controls and artwork
   useMediaSession({
