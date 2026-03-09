@@ -1,14 +1,17 @@
 import { Cast } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 interface CastButtonProps {
   isAvailable: boolean;
   isCasting: boolean;
   deviceName: string;
+  aggressiveUpdate: boolean;
+  onAggressiveUpdateChange: (v: boolean) => void;
   onCast: () => void;
   onStop: () => void;
 }
 
-const CastButton = ({ isAvailable, isCasting, deviceName, onCast, onStop }: CastButtonProps) => {
+const CastButton = ({ isAvailable, isCasting, deviceName, aggressiveUpdate, onAggressiveUpdateChange, onCast, onStop }: CastButtonProps) => {
   if (!isAvailable) return null;
 
   return (
@@ -32,6 +35,18 @@ const CastButton = ({ isAvailable, isCasting, deviceName, onCast, onStop }: Cast
         <span className="text-xs text-primary/80 font-medium truncate max-w-[120px]">
           {deviceName}
         </span>
+      )}
+      {isCasting && (
+        <label className="flex items-center gap-1.5 mt-1 cursor-pointer">
+          <Switch
+            checked={aggressiveUpdate}
+            onCheckedChange={onAggressiveUpdateChange}
+            className="scale-75"
+          />
+          <span className="text-[10px] text-muted-foreground leading-tight">
+            Sync 20s
+          </span>
+        </label>
       )}
     </div>
   );

@@ -7,6 +7,8 @@ interface UseChromecastReturn {
   isCasting: boolean;
   isAvailable: boolean;
   deviceName: string;
+  aggressiveUpdate: boolean;
+  setAggressiveUpdate: (v: boolean) => void;
   startCasting: () => void;
   stopCasting: () => void;
 }
@@ -20,6 +22,7 @@ export const useChromecast = (
   const [isCasting, setIsCasting] = useState(false);
   const [isAvailable, setIsAvailable] = useState(false);
   const [deviceName, setDeviceName] = useState("");
+  const [aggressiveUpdate, setAggressiveUpdate] = useState(false);
   const sessionRef = useRef<any>(null);
   const lastMetadataKeyRef = useRef("");
 
@@ -121,6 +124,17 @@ export const useChromecast = (
     loadMedia(sessionRef.current);
   }, [nowPlaying.title, nowPlaying.artist, nowPlaying.coverArt, isCasting, loadMedia]);
 
+  // Aggressive update: ricarica i metadati ogni 20s indipendentemente dal cambio brano
+  useEffect(() => {
+    if (!aggressiveUpdate || !isCasting || !sessionRef.current) return;
+    const interval = setInterval(() => {
+      if (sessionRef.current) {
+        loadMedia(sessionRef.current);
+      }
+    }, 20000);
+    return () => clearInterval(interval);
+  }, [aggressiveUpdate, isCasting, loadMedia]);
+
   const startCasting = useCallback(() => {
     const castFw = getCast()?.framework;
     if (!castFw) return;
@@ -143,6 +157,8 @@ export const useChromecast = (
     isCasting,
     isAvailable,
     deviceName,
+    aggressiveUpdate,
+    setAggressiveUpdate,
     startCasting,
     stopCasting,
   };
