@@ -7,6 +7,8 @@ interface UseChromecastReturn {
   isCasting: boolean;
   isAvailable: boolean;
   deviceName: string;
+  aggressiveUpdate: boolean;
+  setAggressiveUpdate: (v: boolean) => void;
   startCasting: () => void;
   stopCasting: () => void;
 }
