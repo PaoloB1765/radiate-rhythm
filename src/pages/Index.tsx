@@ -14,7 +14,7 @@ import { Radio, Facebook, Heart } from "lucide-react";
 const Index = () => {
   const { isPlaying, isLoading, volume, isMuted, analyser, togglePlay, setVolume, toggleMute } = useAudioPlayer();
   const nowPlaying = useNowPlaying(isPlaying);
-  const { isCasting, isAvailable, deviceName, startCasting, stopCasting } = useChromecast(nowPlaying);
+  const { isCasting, isAvailable, deviceName, aggressiveUpdate, setAggressiveUpdate, startCasting, stopCasting } = useChromecast(nowPlaying);
 
   // Media Session API for lock screen controls and artwork
   useMediaSession({
