@@ -8,6 +8,7 @@ interface UseAudioPlayerReturn {
   volume: number;
   isMuted: boolean;
   analyser: AnalyserNode | null;
+  audioElement: HTMLAudioElement | null;
   togglePlay: () => void;
   setVolume: (value: number) => void;
   toggleMute: () => void;
