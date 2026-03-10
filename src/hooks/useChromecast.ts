@@ -15,13 +15,12 @@ const getCast = (): any => (window as any).cast;
 const getChrome = (): any => (window as any).chrome;
 
 export const useChromecast = (
-  nowPlaying: { artist: string; title: string; coverArt: string }
+  _nowPlaying: { artist: string; title: string; coverArt: string }
 ): UseChromecastReturn => {
   const [isCasting, setIsCasting] = useState(false);
   const [isAvailable, setIsAvailable] = useState(false);
   const [deviceName, setDeviceName] = useState("");
   const sessionRef = useRef<any>(null);
-  const lastMetadataKeyRef = useRef("");
 
   useEffect(() => {
     // Detect WebView environments (Capacitor, Median) where Cast SDK won't work
@@ -80,46 +79,31 @@ export const useChromecast = (
     }
   }, []);
 
-  const loadMedia = useCallback(
-    (session: any) => {
-      if (!session) return;
-      const chromeCast = getChrome()?.cast;
-      if (!chromeCast) return;
+  const loadMedia = useCallback((session: any) => {
+    if (!session) return;
+    const chromeCast = getChrome()?.cast;
+    if (!chromeCast) return;
 
-      const mediaInfo = new chromeCast.media.MediaInfo(STREAM_URL, "audio/mpeg");
-      mediaInfo.streamType = chromeCast.media.StreamType.LIVE;
+    const mediaInfo = new chromeCast.media.MediaInfo(STREAM_URL, "audio/mpeg");
+    mediaInfo.streamType = chromeCast.media.StreamType.LIVE;
 
-      const metadata = new chromeCast.media.MusicTrackMediaMetadata();
-      metadata.title = nowPlaying.title || "Viva RadioStar";
-      metadata.artist = nowPlaying.artist || "In onda";
-      metadata.albumName = "Viva RadioStar";
-      metadata.images = [new chromeCast.Image(nowPlaying.coverArt || VRS_LOGO)];
+    // Metadati statici: visualizziamo sempre e solo branding radio
+    const metadata = new chromeCast.media.MusicTrackMediaMetadata();
+    metadata.title = "Viva RadioStar";
+    metadata.artist = "Live Stream";
+    metadata.albumName = "Viva RadioStar";
+    metadata.images = [new chromeCast.Image(VRS_LOGO)];
 
-      mediaInfo.metadata = metadata;
+    mediaInfo.metadata = metadata;
 
-      const request = new chromeCast.media.LoadRequest(mediaInfo);
-      request.autoplay = true;
+    const request = new chromeCast.media.LoadRequest(mediaInfo);
+    request.autoplay = true;
 
-      session.loadMedia(request).then(
-        () => console.log("Cast: Media loaded successfully"),
-        (error: any) => console.error("Cast: Load media error", error)
-      );
-    },
-    [nowPlaying.artist, nowPlaying.title, nowPlaying.coverArt]
-  );
-
-  // Default Media Receiver non supporta update dinamici affidabili dei metadati live:
-  // ricarichiamo il media SOLO quando il brano cambia.
-  useEffect(() => {
-    if (!isCasting || !sessionRef.current) return;
-
-    const metadataKey = `${nowPlaying.title || "Viva RadioStar"}|${nowPlaying.artist || "In onda"}|${nowPlaying.coverArt || VRS_LOGO}`;
-
-    if (metadataKey === lastMetadataKeyRef.current) return;
-
-    lastMetadataKeyRef.current = metadataKey;
-    loadMedia(sessionRef.current);
-  }, [nowPlaying.title, nowPlaying.artist, nowPlaying.coverArt, isCasting, loadMedia]);
+    session.loadMedia(request).then(
+      () => console.log("Cast: Media loaded successfully"),
+      (error: any) => console.error("Cast: Load media error", error)
+    );
+  }, []);
 
   const startCasting = useCallback(() => {
     const castFw = getCast()?.framework;
