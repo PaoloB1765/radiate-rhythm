@@ -109,9 +109,9 @@ const Index = () => {
             duration={nowPlaying.duration}
             elapsed={nowPlaying.elapsed}
           />
-          {/* Cast & AirPlay buttons positioned around progress bar */}
-          <div className="absolute -bottom-14 left-1/2 -translate-x-1/2 w-full max-w-[380px] flex items-center justify-between px-0">
-            <div className="-ml-10">
+          {/* Cast & AirPlay buttons just above the progress bar */}
+          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[320px] px-4 flex items-center justify-between pointer-events-none">
+            <div className="pointer-events-auto -ml-2">
               <CastButton
                 isAvailable={isAvailable}
                 isCasting={isCasting}
@@ -120,7 +120,7 @@ const Index = () => {
                 onStop={stopCasting}
               />
             </div>
-            <div className="-mr-10">
+            <div className="pointer-events-auto -mr-2">
               <AirPlayButton
                 isAvailable={airPlay.isAvailable}
                 isActive={airPlay.isActive}
