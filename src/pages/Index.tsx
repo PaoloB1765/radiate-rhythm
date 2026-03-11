@@ -101,32 +101,41 @@ const Index = () => {
           </p>
         </header>
 
-        {/* Vinyl disc visualization */}
-        <VinylDisc 
-          isPlaying={isPlaying} 
-          coverArt={nowPlaying.coverArt}
-          duration={nowPlaying.duration}
-          elapsed={nowPlaying.elapsed}
-        />
+        {/* Vinyl disc visualization with Cast/AirPlay flanking progress bar */}
+        <div className="relative">
+          <VinylDisc 
+            isPlaying={isPlaying} 
+            coverArt={nowPlaying.coverArt}
+            duration={nowPlaying.duration}
+            elapsed={nowPlaying.elapsed}
+          />
+          {/* Cast & AirPlay buttons positioned around progress bar */}
+          <div className="absolute -bottom-14 left-1/2 -translate-x-1/2 w-full max-w-[380px] flex items-center justify-between px-0">
+            <div className="-ml-10">
+              <CastButton
+                isAvailable={isAvailable}
+                isCasting={isCasting}
+                deviceName={deviceName}
+                onCast={startCasting}
+                onStop={stopCasting}
+              />
+            </div>
+            <div className="-mr-10">
+              <AirPlayButton
+                isAvailable={airPlay.isAvailable}
+                isActive={airPlay.isActive}
+                onPress={airPlay.showPicker}
+              />
+            </div>
+          </div>
+        </div>
 
-        {/* Play button and Cast */}
+        {/* Play button */}
         <div className="mt-4 flex items-center gap-6">
           <PlayButton 
             isPlaying={isPlaying} 
             isLoading={isLoading} 
             onClick={togglePlay}
-          />
-          <CastButton
-            isAvailable={isAvailable}
-            isCasting={isCasting}
-            deviceName={deviceName}
-            onCast={startCasting}
-            onStop={stopCasting}
-          />
-          <AirPlayButton
-            isAvailable={airPlay.isAvailable}
-            isActive={airPlay.isActive}
-            onPress={airPlay.showPicker}
           />
         </div>
 
