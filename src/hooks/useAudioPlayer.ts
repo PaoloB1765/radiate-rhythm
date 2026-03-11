@@ -30,7 +30,7 @@ export const useAudioPlayer = (): UseAudioPlayerReturn => {
   const isPlayingRef = useRef(false);
   const shouldPlayRef = useRef(false); // user intent: should we be playing?
   const isIntentionalStop = useRef(false);
-  const heartbeatIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const heartbeatIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const lastPlaybackTime = useRef<number>(0);
 
   // Keep ref in sync with state
