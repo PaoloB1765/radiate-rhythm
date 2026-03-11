@@ -119,16 +119,14 @@ export const useNowPlaying = (isPlaying: boolean) => {
     // Fetch immediately
     fetchNowPlaying();
 
-    // Poll every 15 seconds when playing
+    // Poll every 15 seconds always (regardless of play state)
     const interval = setInterval(() => {
-      if (isPlaying) {
-        fetchNowPlaying();
-      }
+      fetchNowPlaying();
     }, 15000);
 
     // Re-fetch immediately when page becomes visible again
     const handleVisibility = () => {
-      if (document.visibilityState === 'visible' && isPlaying) {
+      if (document.visibilityState === 'visible') {
         fetchNowPlaying();
       }
     };
@@ -138,7 +136,7 @@ export const useNowPlaying = (isPlaying: boolean) => {
       clearInterval(interval);
       document.removeEventListener('visibilitychange', handleVisibility);
     };
-  }, [isPlaying, fetchNowPlaying]);
+  }, [fetchNowPlaying]);
 
   return { ...nowPlaying, elapsed: currentElapsed };
 };
