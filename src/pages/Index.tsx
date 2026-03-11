@@ -110,7 +110,7 @@ const Index = () => {
             elapsed={nowPlaying.elapsed}
           />
           {/* Cast & AirPlay buttons just above the progress bar */}
-          <div className="absolute -bottom-14 left-1/2 -translate-x-1/2 w-full max-w-[320px] px-4 flex items-center justify-between pointer-events-none">
+          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[320px] px-4 flex items-center justify-between pointer-events-none">
             <div className="pointer-events-auto -ml-2">
               <CastButton
                 isAvailable={isAvailable}
