@@ -17,7 +17,25 @@ interface VinylDiscProps {
 const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }: VinylDiscProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPageVisible, setIsPageVisible] = useState(true);
+  const [displayedCover, setDisplayedCover] = useState(coverArt);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const progress = duration > 0 ? (elapsed / duration) * 100 : 0;
+
+  // Scenic artwork transition: fade out + flip, swap, fade in
+  useEffect(() => {
+    if (coverArt === displayedCover) return;
+    setIsTransitioning(true);
+    const swapTimer = setTimeout(() => {
+      setDisplayedCover(coverArt);
+    }, 450);
+    const endTimer = setTimeout(() => {
+      setIsTransitioning(false);
+    }, 900);
+    return () => {
+      clearTimeout(swapTimer);
+      clearTimeout(endTimer);
+    };
+  }, [coverArt, displayedCover]);
 
   // Pause CSS animations when page is hidden (battery optimization)
   useEffect(() => {
@@ -98,22 +116,46 @@ const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }
           />
           
           {/* Center label with cover art - clickable */}
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div 
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ perspective: '800px' }}
+          >
             <button 
               onClick={() => coverArt && setIsDialogOpen(true)}
               className={cn(
                 "w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden",
                 "border-4 border-vinyl-groove",
-                "shadow-inner",
-                coverArt && "cursor-pointer hover:scale-105 transition-transform duration-200"
+                "shadow-inner relative",
+                coverArt && "cursor-pointer hover:scale-105"
               )}
+              style={{
+                transformStyle: 'preserve-3d',
+                transition: 'transform 900ms cubic-bezier(0.65, 0, 0.35, 1)',
+                transform: isTransitioning 
+                  ? 'rotateY(180deg) scale(0.85)' 
+                  : 'rotateY(0deg) scale(1)',
+              }}
               disabled={!coverArt}
             >
-              {coverArt ? (
+              {/* Glow flash during transition */}
+              <div
+                className="absolute inset-0 rounded-full pointer-events-none z-10"
+                style={{
+                  background: 'radial-gradient(circle, hsl(var(--primary) / 0.6) 0%, transparent 70%)',
+                  opacity: isTransitioning ? 1 : 0,
+                  transition: 'opacity 450ms ease-in-out',
+                }}
+              />
+              {displayedCover ? (
                 <img 
-                  src={coverArt} 
+                  src={displayedCover} 
                   alt="Album cover" 
                   className="w-full h-full object-cover"
+                  style={{
+                    transition: 'opacity 450ms ease-in-out, filter 450ms ease-in-out',
+                    opacity: isTransitioning ? 0.3 : 1,
+                    filter: isTransitioning ? 'blur(4px) brightness(1.4)' : 'blur(0) brightness(1)',
+                  }}
                 />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
