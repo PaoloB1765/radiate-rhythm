@@ -15,6 +15,7 @@ interface NowPlayingProps {
   artist: string;
   title: string;
   album?: string;
+  year?: string;
   isPlaying: boolean;
   nextArtist?: string;
   nextTitle?: string;
@@ -27,7 +28,7 @@ const formatTime = (timestamp: number) => {
   return date.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
 };
 
-const NowPlaying = ({ artist, title, album, isPlaying, nextArtist, nextTitle, nextCoverArt, songHistory = [] }: NowPlayingProps) => {
+const NowPlaying = ({ artist, title, album, year, isPlaying, nextArtist, nextTitle, nextCoverArt, songHistory = [] }: NowPlayingProps) => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   return (
@@ -58,6 +59,11 @@ const NowPlaying = ({ artist, title, album, isPlaying, nextArtist, nextTitle, ne
           {album && (
             <p className="text-muted-foreground/70 text-sm truncate">
               <span>Album: </span><span className="italic">{album}</span>
+            </p>
+          )}
+          {year && (
+            <p className="text-muted-foreground/70 text-sm truncate">
+              <span>Year: </span><span>{year}</span>
             </p>
           )}
         </div>

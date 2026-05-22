@@ -11,6 +11,7 @@ interface NowPlayingData {
   artist: string;
   title: string;
   album: string;
+  year: string;
   coverArt: string;
   duration: number;
   elapsed: number;
@@ -28,6 +29,7 @@ export const useNowPlaying = (isPlaying: boolean) => {
     artist: "",
     title: "",
     album: "",
+    year: "",
     coverArt: "",
     duration: 0,
     elapsed: 0,
@@ -75,6 +77,7 @@ export const useNowPlaying = (isPlaying: boolean) => {
           artist: nowPlayingTrack.artist || "",
           title: nowPlayingTrack.title || "",
           album: nowPlayingTrack.album || "",
+          year: String(nowPlayingTrack.custom_fields?.year ?? nowPlayingTrack.year ?? "") || "",
           coverArt: nowPlayingTrack.art || data.now_playing?.song?.art || "",
           duration,
           elapsed,
