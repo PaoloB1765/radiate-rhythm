@@ -15,6 +15,7 @@ interface NowPlayingProps {
   artist: string;
   title: string;
   album?: string;
+  year?: string;
   isPlaying: boolean;
   nextArtist?: string;
   nextTitle?: string;
