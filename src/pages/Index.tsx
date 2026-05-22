@@ -150,6 +150,7 @@ const Index = () => {
           artist={nowPlaying.artist}
           title={nowPlaying.title}
           album={nowPlaying.album}
+          year={nowPlaying.year}
           isPlaying={isPlaying}
           nextArtist={nowPlaying.nextArtist}
           nextTitle={nowPlaying.nextTitle}
