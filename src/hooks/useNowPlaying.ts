@@ -29,6 +29,7 @@ export const useNowPlaying = (isPlaying: boolean) => {
     artist: "",
     title: "",
     album: "",
+    year: "",
     coverArt: "",
     duration: 0,
     elapsed: 0,
