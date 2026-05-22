@@ -61,6 +61,11 @@ const NowPlaying = ({ artist, title, album, year, isPlaying, nextArtist, nextTit
               <span>Album: </span><span className="italic">{album}</span>
             </p>
           )}
+          {year && (
+            <p className="text-muted-foreground/70 text-sm truncate">
+              <span>Year: </span><span>{year}</span>
+            </p>
+          )}
         </div>
       ) : (
         <div className="flex items-center gap-3 text-muted-foreground">
