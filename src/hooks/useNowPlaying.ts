@@ -11,6 +11,7 @@ interface NowPlayingData {
   artist: string;
   title: string;
   album: string;
+  year: string;
   coverArt: string;
   duration: number;
   elapsed: number;
