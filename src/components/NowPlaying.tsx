@@ -28,7 +28,7 @@ const formatTime = (timestamp: number) => {
   return date.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
 };
 
-const NowPlaying = ({ artist, title, album, isPlaying, nextArtist, nextTitle, nextCoverArt, songHistory = [] }: NowPlayingProps) => {
+const NowPlaying = ({ artist, title, album, year, isPlaying, nextArtist, nextTitle, nextCoverArt, songHistory = [] }: NowPlayingProps) => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   return (
