@@ -77,6 +77,7 @@ export const useNowPlaying = (isPlaying: boolean) => {
           artist: nowPlayingTrack.artist || "",
           title: nowPlayingTrack.title || "",
           album: nowPlayingTrack.album || "",
+          year: String(nowPlayingTrack.custom_fields?.year ?? nowPlayingTrack.year ?? "") || "",
           coverArt: nowPlayingTrack.art || data.now_playing?.song?.art || "",
           duration,
           elapsed,
