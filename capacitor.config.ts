@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.42904fb1b3844c748a674e3c200c67c5',
-  appName: 'Viva RadioStar',
+  appId: 'app.lovable.vrs',
+  appName: 'Viva Radio Star',
   webDir: 'dist',
   plugins: {
     SplashScreen: {
