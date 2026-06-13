@@ -17,6 +17,9 @@ interface VinylDiscProps {
 const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }: VinylDiscProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPageVisible, setIsPageVisible] = useState(true);
+  const [currentCover, setCurrentCover] = useState<string | undefined>(coverArt);
+  const [previousCover, setPreviousCover] = useState<string | undefined>(undefined);
+  const [transitionKey, setTransitionKey] = useState(0);
   const progress = duration > 0 ? (elapsed / duration) * 100 : 0;
 
   // Pause CSS animations when page is hidden (battery optimization)
@@ -28,6 +31,16 @@ const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
+
+  // Animate cover art swap
+  useEffect(() => {
+    if (coverArt === currentCover) return;
+    setPreviousCover(currentCover);
+    setCurrentCover(coverArt);
+    setTransitionKey((k) => k + 1);
+    const t = setTimeout(() => setPreviousCover(undefined), 900);
+    return () => clearTimeout(t);
+  }, [coverArt, currentCover]);
   
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
