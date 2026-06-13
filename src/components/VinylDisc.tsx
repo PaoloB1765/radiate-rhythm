@@ -113,28 +113,60 @@ const VinylDisc = ({ isPlaying, coverArt, className, duration = 0, elapsed = 0 }
           {/* Center label with cover art - clickable */}
           <div className="absolute inset-0 flex items-center justify-center">
             <button 
-              onClick={() => coverArt && setIsDialogOpen(true)}
+              onClick={() => currentCover && setIsDialogOpen(true)}
               className={cn(
-                "w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden",
+                "relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden",
                 "border-4 border-vinyl-groove",
                 "shadow-inner",
-                coverArt && "cursor-pointer hover:scale-105 transition-transform duration-200"
+                currentCover && "cursor-pointer hover:scale-105 transition-transform duration-200"
               )}
-              disabled={!coverArt}
+              style={{ perspective: "600px" }}
+              disabled={!currentCover}
             >
-              {coverArt ? (
-                <img 
-                  src={coverArt} 
-                  alt="Album cover" 
-                  className="w-full h-full object-cover"
+              {/* Previous cover fading out */}
+              {previousCover && (
+                <img
+                  key={`prev-${transitionKey}`}
+                  src={previousCover}
+                  alt=""
+                  aria-hidden
+                  className="absolute inset-0 w-full h-full object-cover animate-cover-out"
+                  style={{ transformOrigin: "center", backfaceVisibility: "hidden" }}
+                />
+              )}
+              {/* Current cover */}
+              {currentCover ? (
+                <img
+                  key={`cur-${transitionKey}`}
+                  src={currentCover}
+                  alt="Album cover"
+                  className={cn(
+                    "relative w-full h-full object-cover",
+                    previousCover && "animate-cover-in"
+                  )}
+                  style={{ transformOrigin: "center", backfaceVisibility: "hidden" }}
                 />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                   <span className="text-primary-foreground font-display text-xl md:text-2xl">VRS</span>
                 </div>
               )}
+              {/* Shine sweep on transition */}
+              {previousCover && (
+                <span
+                  key={`shine-${transitionKey}`}
+                  aria-hidden
+                  className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 animate-cover-shine"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, transparent, hsl(0 0% 100% / 0.55), transparent)",
+                    mixBlendMode: "screen",
+                  }}
+                />
+              )}
             </button>
           </div>
+
           
           {/* Center hole */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-background" />
