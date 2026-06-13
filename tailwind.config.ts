@@ -96,6 +96,20 @@ export default {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
+        "cover-in": {
+          "0%": { transform: "rotateY(90deg) scale(0.55)", opacity: "0", filter: "blur(8px) saturate(1.4)" },
+          "60%": { opacity: "1", filter: "blur(0) saturate(1.2)" },
+          "100%": { transform: "rotateY(0deg) scale(1)", opacity: "1", filter: "blur(0) saturate(1)" },
+        },
+        "cover-out": {
+          "0%": { transform: "rotateY(0deg) scale(1)", opacity: "1", filter: "blur(0)" },
+          "100%": { transform: "rotateY(-90deg) scale(0.55)", opacity: "0", filter: "blur(8px)" },
+        },
+        "cover-shine": {
+          "0%": { transform: "translateX(-120%) skewX(-20deg)", opacity: "0" },
+          "30%": { opacity: "0.9" },
+          "100%": { transform: "translateX(120%) skewX(-20deg)", opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -103,6 +117,9 @@ export default {
         "spin-slow": "spin 8s linear infinite",
         "marquee": "marquee 8s linear infinite",
         "marquee-continuous": "marquee-continuous 10s linear infinite",
+        "cover-in": "cover-in 900ms cubic-bezier(0.22, 1, 0.36, 1) both",
+        "cover-out": "cover-out 700ms cubic-bezier(0.55, 0, 0.7, 0.2) both",
+        "cover-shine": "cover-shine 1100ms ease-out both",
       },
     },
   },
