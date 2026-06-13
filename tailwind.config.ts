@@ -96,6 +96,20 @@ export default {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
+        "cover-in": {
+          "0%": { transform: "rotateY(90deg) scale(0.55)", opacity: "0", filter: "blur(8px) saturate(1.4)" },
+          "60%": { opacity: "1", filter: "blur(0) saturate(1.2)" },
+          "100%": { transform: "rotateY(0deg) scale(1)", opacity: "1", filter: "blur(0) saturate(1)" },
+        },
+        "cover-out": {
+          "0%": { transform: "rotateY(0deg) scale(1)", opacity: "1", filter: "blur(0)" },
+          "100%": { transform: "rotateY(-90deg) scale(0.55)", opacity: "0", filter: "blur(8px)" },
+        },
+        "cover-shine": {
+          "0%": { transform: "translateX(-120%) skewX(-20deg)", opacity: "0" },
+          "30%": { opacity: "0.9" },
+          "100%": { transform: "translateX(120%) skewX(-20deg)", opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
