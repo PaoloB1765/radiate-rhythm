@@ -18,10 +18,13 @@ workflows:
           keychain initialize
           app-store-connect fetch-signing-files "co.median.ios.mbbline" --type IOS_APP_STORE --create
           keychain add-certificates
+      - name: Allinea Bundle Identifier nel progetto Xcode
+        script: |
+          # Questo comando forza l'identificativo corretto nel file di configurazione di Xcode
+          sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = .*/PRODUCT_BUNDLE_IDENTIFIER = co.median.ios.mbbline;/g' ios/App/App.xcodeproj/project.pbxproj
       - name: Genera Export Options e applica profili
         script: |
-          xcode-project use-profiles \
-            --project "ios/App/App.xcodeproj"
+          xcode-project use-profiles
       - name: Compila l'applicazione iOS
         script: |
           xcode-project build-ipa \
