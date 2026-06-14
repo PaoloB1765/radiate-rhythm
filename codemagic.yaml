@@ -16,5 +16,5 @@ workflows:
       - name: Configura il Code Signing automatico
         script: |
           keychain initialize
-          app-store-connect fetch-signing-files "co.median.ios.mbbline" --type IOS_APP_STORE --create
+          app-store-connect fetch-signing-files "co.median.ios.mbbline" --type IOS_APP_STORE --create --create-key
           keychain add-certificates
