@@ -1,29 +1,20 @@
-workflow:
-  name: iOS Capacitor Build
-  max_build_duration: 60
-  environment:
-    groups:
-      - app_store_credentials # Qui dentro Codemagic leggerà le chiavi Apple
-    node: 22
-    xcode: latest
-  scripts:
-    - name: Installa dipendenze e sincronizza Capacitor
-      script: |
-        npm install
-        npm run build
-        npx cap sync ios
-    - name: Configura il Code Signing automatico
-      script: |
-        keychain initialize
-        app-store-connect fetch-signing-files "co.median.ios.mbbline" --type IOS_APP_STORE --create
-        keychain add-certificates
-        xcode-project use-profiles
-    - name: Compila l'applicazione (.ipa)
-      script: |
-        xcode-project build-ipa --workspace "App/App.xcworkspace" --scheme "App"
-  artifacts:
-    - build/ios/ipa/*.ipa
-  publishing:
-    app_store_connect:
-      auth:  integration
-  #Test Push #
+workflows:
+  ios-capacitor-build:
+    name: iOS Capacitor Build
+    max_build_duration: 60
+    environment:
+      groups:
+        - app_store_credentials
+      node: 22
+      xcode: latest
+    scripts:
+      - name: Installa dipendenze e sincronizza Capacitor
+        script: |
+          npm install
+          npm run build
+          npx cap sync ios
+      - name: Configura il Code Signing automatico
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "co.median.ios.mbbline" --type IOS_APP_STORE --create
+          keychain add-certificates
