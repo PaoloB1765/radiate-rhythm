@@ -20,7 +20,6 @@ workflows:
           keychain add-certificates
       - name: Allinea Bundle Identifier nel progetto Xcode
         script: |
-          # Questo comando forza l'identificativo corretto nel file di configurazione di Xcode
           sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = .*/PRODUCT_BUNDLE_IDENTIFIER = co.median.ios.mbbline;/g' ios/App/App.xcodeproj/project.pbxproj
       - name: Genera Export Options e applica profili
         script: |
@@ -31,5 +30,4 @@ workflows:
             --project "ios/App/App.xcodeproj" \
             --scheme "App"
     artifacts:
-      - /Users/builder/Library/Developer/Xcode/DerivedData/**/Build/Products/**/*.ipa
-      - "*.ipa"
+      - build/ios/ipa/App.ipa
