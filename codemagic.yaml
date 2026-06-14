@@ -20,4 +20,4 @@ workflows:
           keychain add-certificates
     artifacts:
       - /Users/builder/Library/Developer/Xcode/DerivedData/**/Build/Products/**/*.ipa
-      - *.ipa
+      - "*.ipa"
