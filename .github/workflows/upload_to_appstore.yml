@@ -25,7 +25,7 @@ jobs:
       - name: Compila file IPA e Carica
         uses: apple-actions/upload-testflight-build@v1
         with:
-          app-path: "ios/App/App.xcworkspace" # Questo indica a GitHub dove trovare il progetto Capacitor
+          app-path: "App/App.xcworkspace" # Questo indica a GitHub dove trovare il progetto Capacitor
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
