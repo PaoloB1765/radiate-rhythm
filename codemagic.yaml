@@ -18,6 +18,11 @@ workflows:
           keychain initialize
           app-store-connect fetch-signing-files "co.median.ios.mbbline" --type IOS_APP_STORE --create
           keychain add-certificates
-      - name: Trova percorso Xcode
+      - name: Compila l'applicazione iOS
         script: |
-          find . -name "*.xcworkspace"
+          xcode-project build-ipa \
+            --project "ios/App/App.xcodeproj" \
+            --scheme "App"
+    artifacts:
+      - /Users/builder/Library/Developer/Xcode/DerivedData/**/Build/Products/**/*.ipa
+      - "*.ipa"
