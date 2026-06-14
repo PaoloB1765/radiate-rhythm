@@ -10,9 +10,12 @@ workflows:
     integrations:
       app_store_connect: Codemagic
     scripts:
-      - name: Installa dipendenze e sincronizza Capacitor
+      - name: Installa dipendenze e genera icone
         script: |
           npm install
+          # Installa lo strumento per generare le icone ed esegui la creazione
+          npm install @capacitor/assets --save-dev
+          npx capacitor-assets generate --ios
           npm run build
           npx cap sync ios
       - name: Configura il Code Signing automatico
@@ -22,9 +25,7 @@ workflows:
           keychain add-certificates
       - name: Allinea Bundle Identifier e incrementa build nel progetto Xcode
         script: |
-          # Forza il Bundle ID corretto
           sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = .*/PRODUCT_BUNDLE_IDENTIFIER = co.median.ios.mbbline;/g' ios/App/App.xcodeproj/project.pbxproj
-          # Forza il numero di build usando il contatore automatico di Codemagic (es. 19, 20...)
           sed -i '' "s/CURRENT_PROJECT_VERSION = .*/CURRENT_PROJECT_VERSION = $BUILD_NUMBER;/g" ios/App/App.xcodeproj/project.pbxproj
       - name: Genera Export Options e applica profili
         script: |
