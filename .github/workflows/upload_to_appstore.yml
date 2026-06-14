@@ -1,0 +1,31 @@
+name: Compila e Carica su App Store
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: macos-latest
+
+    steps:
+      - name: Sincronizza codice
+        uses: actions/checkout@v4
+
+      - name: Installa Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Installa dipendenze e compila
+        run: |
+          npm install
+          npm run build
+          npx cap sync ios
+
+      - name: Compila file IPA e Carica
+        uses: apple-actions/upload-testflight-build@v1
+        with:
+          app-path: "ios/App/App.xcworkspace" # Questo indica a GitHub dove trovare il progetto Capacitor
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
