@@ -20,14 +20,12 @@ workflows:
           keychain initialize
           app-store-connect fetch-signing-files "co.median.ios.mbbline" --type IOS_APP_STORE --create
           keychain add-certificates
-      - name: Allinea Bundle Identifier nel progetto Xcode
+      - name: Allinea Bundle Identifier e incrementa build nel progetto Xcode
         script: |
+          # Forza il Bundle ID corretto
           sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = .*/PRODUCT_BUNDLE_IDENTIFIER = co.median.ios.mbbline;/g' ios/App/App.xcodeproj/project.pbxproj
-      - name: Incrementa numero build automatico
-        script: |
-          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-build-number --bundle-identifier "co.median.ios.mbbline")
-          NEW_BUILD_NUMBER=$((LATEST_BUILD_NUMBER + 1))
-          cd ios/App && agvtool new-version -all $NEW_BUILD_NUMBER
+          # Forza il numero di build usando il contatore automatico di Codemagic (es. 19, 20...)
+          sed -i '' "s/CURRENT_PROJECT_VERSION = .*/CURRENT_PROJECT_VERSION = $BUILD_NUMBER;/g" ios/App/App.xcodeproj/project.pbxproj
       - name: Genera Export Options e applica profili
         script: |
           xcode-project use-profiles
