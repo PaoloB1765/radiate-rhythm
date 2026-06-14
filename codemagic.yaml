@@ -18,9 +18,9 @@ workflows:
           keychain initialize
           app-store-connect fetch-signing-files "co.median.ios.mbbline" --type IOS_APP_STORE --create
           keychain add-certificates
-      - name: Genera Export Options
+      - name: Genera Export Options e applica profili
         script: |
-          xcode-project use-profiles
+          xcode-project use-profiles --bundle-id "co.median.ios.mbbline"
       - name: Compila l'applicazione iOS
         script: |
           xcode-project build-ipa \
