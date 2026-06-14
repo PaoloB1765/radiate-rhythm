@@ -31,3 +31,7 @@ workflows:
             --scheme "App"
     artifacts:
       - build/ios/ipa/App.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
