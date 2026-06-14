@@ -25,10 +25,12 @@ workflows:
           sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = .*/PRODUCT_BUNDLE_IDENTIFIER = co.median.ios.mbbline;/g' ios/App/App.xcodeproj/project.pbxproj
       - name: Incrementa numero build automatico
         script: |
-          # Questo comando chiede ad Apple l'ultimo numero usato e lo aumenta di 1
-          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-build-number --bundle-id "co.median.ios.mbbline")
+          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-build-number --bundle-identifier "co.median.ios.mbbline")
           NEW_BUILD_NUMBER=$((LATEST_BUILD_NUMBER + 1))
-          xcode-project use-profiles --build-number $NEW_BUILD_NUMBER
+          cd ios/App && agvtool new-version -all $NEW_BUILD_NUMBER
+      - name: Genera Export Options e applica profili
+        script: |
+          xcode-project use-profiles
       - name: Compila l'applicazione iOS
         script: |
           xcode-project build-ipa \
