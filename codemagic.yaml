@@ -20,8 +20,8 @@ workflows:
           keychain add-certificates
       - name: Compila l'applicazione iOS
         script: |
-          xcode-project build-ipa
+          xcode-project build-ipa \
+            --workspace "ios/App.xcworkspace"
     artifacts:
       - /Users/builder/Library/Developer/Xcode/DerivedData/**/Build/Products/**/*.ipa
       - "*.ipa"
-
