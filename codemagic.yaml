@@ -20,7 +20,8 @@ workflows:
           keychain add-certificates
       - name: Genera Export Options e applica profili
         script: |
-          xcode-project use-profiles --bundle-id "co.median.ios.mbbline"
+          xcode-project use-profiles \
+            --project "ios/App/App.xcodeproj"
       - name: Compila l'applicazione iOS
         script: |
           xcode-project build-ipa \
